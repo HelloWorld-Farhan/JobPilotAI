@@ -74,7 +74,7 @@ public class QueueService {
     }
 
     public QueueItem getNextJob() {
-        String sql = "SELECT * FROM automation_queue WHERE status = 'Queued' ORDER BY queue_position ASC LIMIT 1";
+        String sql = "SELECT * FROM automation_queue WHERE status = 'Queued' OR (status = 'Failed' AND retry_count < 3) ORDER BY queue_position ASC LIMIT 1";
         try (Connection conn = DatabaseManager.getInstance().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
