@@ -18,8 +18,10 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.image.Image;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.geometry.Rectangle2D;
 
 import java.io.InputStream;
 import java.util.Objects;
@@ -84,10 +86,18 @@ public class MainApp extends Application {
         // Configure stage before loading content
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setTitle(AppConfig.APP_NAME + " – " + AppConfig.APP_VERSION);
-        stage.setMinWidth(AppConfig.MIN_WIDTH);
-        stage.setMinHeight(AppConfig.MIN_HEIGHT);
-        stage.setWidth(AppConfig.DEFAULT_WIDTH);
-        stage.setHeight(AppConfig.DEFAULT_HEIGHT);
+
+        // Dynamically scale down if the user's screen is smaller than the defaults
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+        double idealWidth = Math.min(AppConfig.DEFAULT_WIDTH, bounds.getWidth() * 0.9);
+        double idealHeight = Math.min(AppConfig.DEFAULT_HEIGHT, bounds.getHeight() * 0.9);
+        double minWidth = Math.min(AppConfig.MIN_WIDTH, bounds.getWidth() * 0.8);
+        double minHeight = Math.min(AppConfig.MIN_HEIGHT, bounds.getHeight() * 0.8);
+
+        stage.setMinWidth(minWidth);
+        stage.setMinHeight(minHeight);
+        stage.setWidth(idealWidth);
+        stage.setHeight(idealHeight);
 
         // Load application icon
         try {
