@@ -30,6 +30,7 @@ public class SettingsController implements Initializable {
     @FXML private TextField tfYearsExp;
     @FXML private CheckBox  chkCurrentlyEmployed;
     @FXML private CheckBox  chkRequireSponsorship;
+    @FXML private TextField tfLinkedInUrl;
     
     // File Paths & Account
     @FXML private TextField    tfResumePath;
@@ -101,6 +102,7 @@ public class SettingsController implements Initializable {
         tfYearsExp         .textProperty().bindBidirectional(viewModel.yearsExperienceProperty());
         chkCurrentlyEmployed.selectedProperty().bindBidirectional(viewModel.currentlyEmployedProperty());
         chkRequireSponsorship.selectedProperty().bindBidirectional(viewModel.requireSponsorshipProperty());
+        tfLinkedInUrl      .textProperty().bindBidirectional(viewModel.linkedInProfileUrlProperty());
     }
 
     private void loadUserProfile() {

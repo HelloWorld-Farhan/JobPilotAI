@@ -45,6 +45,11 @@ public class SettingsService {
     private String yearsExperience;
     private boolean currentlyEmployed;
     private boolean requireSponsorship;
+    
+    // Auto-Pilot & Documents
+    private String parsedResumeJson;
+    private String universalCoverLetter;
+    private String linkedInProfileUrl;
 
     private SettingsService() {}
 
@@ -83,6 +88,10 @@ public class SettingsService {
         currentlyEmployed    = bool(repo.get(AppConfig.SETTING_CURRENTLY_EMPLOYED, String.valueOf(AppConfig.DEFAULT_CURRENTLY_EMPLOYED)));
         requireSponsorship   = bool(repo.get(AppConfig.SETTING_REQUIRE_SPONSORSHIP, String.valueOf(AppConfig.DEFAULT_REQUIRE_SPONSORSHIP)));
 
+        parsedResumeJson     = repo.get("parsedResumeJson", "");
+        universalCoverLetter = repo.get("universalCoverLetter", "");
+        linkedInProfileUrl   = repo.get("linkedInProfileUrl", "");
+
         AppLogger.info("Settings loaded. Theme=" + theme);
     }
 
@@ -114,6 +123,10 @@ public class SettingsService {
         repo.set(AppConfig.SETTING_YEARS_EXP,      yearsExperience);
         repo.set(AppConfig.SETTING_CURRENTLY_EMPLOYED, String.valueOf(currentlyEmployed));
         repo.set(AppConfig.SETTING_REQUIRE_SPONSORSHIP, String.valueOf(requireSponsorship));
+
+        repo.set("parsedResumeJson", parsedResumeJson);
+        repo.set("universalCoverLetter", universalCoverLetter);
+        repo.set("linkedInProfileUrl", linkedInProfileUrl);
 
         AppLogger.info("Settings saved.");
     }
@@ -218,4 +231,11 @@ public class SettingsService {
     public void setCurrentlyEmployed(boolean b) { this.currentlyEmployed = b; }
     public boolean isRequireSponsorship() { return requireSponsorship; }
     public void setRequireSponsorship(boolean b) { this.requireSponsorship = b; }
+    
+    public String getParsedResumeJson() { return parsedResumeJson; }
+    public void setParsedResumeJson(String parsedResumeJson) { this.parsedResumeJson = parsedResumeJson; }
+    public String getUniversalCoverLetter() { return universalCoverLetter; }
+    public void setUniversalCoverLetter(String universalCoverLetter) { this.universalCoverLetter = universalCoverLetter; }
+    public String getLinkedInProfileUrl() { return linkedInProfileUrl; }
+    public void setLinkedInProfileUrl(String linkedInProfileUrl) { this.linkedInProfileUrl = linkedInProfileUrl; }
 }

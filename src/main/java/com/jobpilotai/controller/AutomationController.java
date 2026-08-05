@@ -105,4 +105,28 @@ public class AutomationController implements Initializable {
         tfJobUrl.clear();
         refreshData();
     }
+    
+    @FXML private void onFullAutoPilot() {
+        String resumeJson = com.jobpilotai.service.SettingsService.getInstance().getParsedResumeJson();
+        if (resumeJson == null || resumeJson.trim().isEmpty()) {
+            com.jobpilotai.utils.DialogUtils.showAlert("Auto-Pilot Error", "No parsed resume found. Please upload and parse your resume in the 'Parse Resume' tab first.");
+            return;
+        }
+        
+        com.jobpilotai.utils.DialogUtils.showAlert("Auto-Pilot Initiated", "AI is analyzing your resume to build the perfect Search URL. Please wait...");
+        
+        java.util.concurrent.CompletableFuture.runAsync(() -> {
+            String searchUrl = com.jobpilotai.ai.AiClient.getInstance().extractJobSearchUrl(resumeJson);
+            
+            javafx.application.Platform.runLater(() -> {
+                if (searchUrl != null && !searchUrl.isEmpty()) {
+                    tfJobUrl.setText(searchUrl);
+                    onAddJob(); // Add it to the queue
+                    onStart();  // Start the engine
+                } else {
+                    com.jobpilotai.utils.DialogUtils.showError("Auto-Pilot Error", "Failed to generate Search URL. Ensure Gemini API key is valid.");
+                }
+            });
+        });
+    }
 }

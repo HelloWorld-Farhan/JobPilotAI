@@ -93,6 +93,10 @@ public class AiController implements Initializable {
                 
                 // Save to DB
                 saveParsedResumeToDb(currentResume.getName(), currentResume.getAbsolutePath(), jsonResult, rawText);
+                
+                // Save to Global Settings for persistence
+                com.jobpilotai.service.SettingsService.getInstance().setParsedResumeJson(jsonResult);
+                com.jobpilotai.service.SettingsService.getInstance().save();
 
                 Platform.runLater(() -> {
                     taResumeOutput.setText(formatJson(jsonResult));

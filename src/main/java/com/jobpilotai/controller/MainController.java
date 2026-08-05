@@ -44,7 +44,6 @@ public class MainController implements Initializable {
     @FXML private Button navAutomation;
     @FXML private Button navApplications;
     @FXML private Button navHistory;
-    @FXML private Button navReports;
     @FXML private Button navSettings;
     @FXML private Button navLogs;
     @FXML private Button navAbout;
@@ -68,11 +67,11 @@ public class MainController implements Initializable {
     // Labels stored for collapse/expand toggle
     private static final String[] NAV_FULL_TEXT = {
         "📊   Dashboard", "🤖   Automation", "📋   Applications", "📁   History",
-        "📈   Reports",   "⚙   Settings",     "📜   Logs",
+        "⚙   Settings",     "📜   Logs",
         "ℹ   About"
     };
     private static final String[] NAV_ICON_TEXT = {
-        "📊", "🤖", "📋", "📁", "📈", "⚙", "📜", "ℹ"
+        "📊", "🤖", "📋", "📁", "⚙", "📜", "ℹ"
     };
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
@@ -124,7 +123,6 @@ public class MainController implements Initializable {
     @FXML private void onAutomation()   { navigateTo("automation");   setActiveButton(navAutomation); }
     @FXML private void onApplications() { navigateTo("applications"); setActiveButton(navApplications); }
     @FXML private void onHistory()      { navigateTo("history");      setActiveButton(navHistory); }
-    @FXML private void onReports()      { navigateTo("reports");      setActiveButton(navReports); }
     @FXML private void onSettings()     { navigateTo("settings");     setActiveButton(navSettings); }
     @FXML private void onLogs()         { navigateTo("logs");         setActiveButton(navLogs); }
     @FXML private void onAbout()        { navigateTo("about");        setActiveButton(navAbout); }
@@ -146,7 +144,7 @@ public class MainController implements Initializable {
 
         // Swap button text labels
         Button[] navBtns = {navDashboard, navAutomation, navApplications, navHistory,
-                navReports, navSettings, navLogs, navAbout};
+                navSettings, navLogs, navAbout};
         String[] texts = sidebarCollapsed ? NAV_ICON_TEXT : NAV_FULL_TEXT;
         for (int i = 0; i < navBtns.length; i++) {
             navBtns[i].setText(texts[i]);
@@ -199,7 +197,7 @@ public class MainController implements Initializable {
 
     private void setActiveButton(Button active) {
         Button[] all = {navDashboard, navAutomation, navApplications, navHistory,
-                navReports, navSettings, navLogs, navAbout};
+                navSettings, navLogs, navAbout};
         for (Button btn : all) {
             btn.getStyleClass().removeAll("nav-btn-active");
             if (!btn.getStyleClass().contains("nav-btn")) {

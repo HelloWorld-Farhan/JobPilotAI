@@ -34,6 +34,8 @@
                 <Button text="▶ Start" styleClass="btn-primary" onAction="#onStart"/>
                 <Button text="⏸ Pause" styleClass="btn-secondary" onAction="#onPause"/>
                 <Button text="⏹ Stop" styleClass="btn-danger" onAction="#onStop"/>
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="🚀 Full Auto-Pilot" style="-fx-background-color: #8B5CF6; -fx-text-fill: white; -fx-font-weight: bold;" onAction="#onFullAutoPilot" />
             </HBox>
             <HBox spacing="8">
                 <Button text="⏏ Resume" styleClass="btn-secondary" onAction="#onResume"/>

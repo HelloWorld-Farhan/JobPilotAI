@@ -138,6 +138,20 @@ public class AiClient {
         return offlineFallback(prompt);
     }
 
+    public String extractJobSearchUrl(String resumeJson) {
+        String prompt = "You are an expert tech recruiter. Based on the following resume JSON, generate exactly ONE highly optimized LinkedIn job search URL. " +
+                        "The URL must contain keywords relevant to the candidate's core skills and title. " +
+                        "CRITICAL: You MUST append '&f_AL=true' to the URL to filter for Easy Apply jobs. " +
+                        "Return ONLY the raw URL string starting with https://www.linkedin.com/jobs/search/?keywords= . Do not include markdown, explanation, or quotes.\n\n" +
+                        "Resume JSON:\n" + resumeJson;
+                        
+        String result = callGemini(prompt);
+        if (result != null) {
+            return result.trim().replace("\"", "");
+        }
+        return null;
+    }
+
     /**
      * Fallback method if API is unavailable or disabled.
      */

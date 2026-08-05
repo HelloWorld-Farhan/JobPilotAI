@@ -61,11 +61,17 @@
             <VBox styleClass="settings-card" spacing="16">
                 <HBox alignment="CENTER_LEFT" spacing="10">
                     <Label text="📋" style="-fx-font-size: 16px;"/>
-                    <Label text="Application Auto-Fill Profile" styleClass="settings-section-title"/>
+                    <Label text="Application Auto-Fill Profile" styleClass="card-title" style="-fx-font-size: 18px;"/>
                 </HBox>
                 <Separator style="-fx-opacity: 0.4;"/>
-
-                <GridPane hgap="20" vgap="12">
+                                
+                <VBox spacing="5">
+                    <Label text="LinkedIn Profile URL" styleClass="settings-label"/>
+                    <TextField fx:id="tfLinkedInUrl" promptText="https://www.linkedin.com/in/yourprofile" styleClass="text-field"/>
+                    <Label text="Used for Auto-Pilot profile targeting." styleClass="settings-hint"/>
+                </VBox>
+                                
+                <GridPane hgap="20" vgap="15">
                     <columnConstraints>
                         <ColumnConstraints minWidth="120"/>
                         <ColumnConstraints hgrow="ALWAYS"/>

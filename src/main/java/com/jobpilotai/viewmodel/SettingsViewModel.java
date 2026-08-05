@@ -34,6 +34,8 @@ public class SettingsViewModel {
     private final StringProperty  yearsExperience      = new SimpleStringProperty();
     private final BooleanProperty currentlyEmployed    = new SimpleBooleanProperty();
     private final BooleanProperty requireSponsorship   = new SimpleBooleanProperty();
+    
+    private final StringProperty  linkedInProfileUrl   = new SimpleStringProperty();
 
     public void load() {
         resumePath             .set(service.getResumePath());
@@ -63,6 +65,7 @@ public class SettingsViewModel {
         yearsExperience        .set(service.getYearsExperience());
         currentlyEmployed      .set(service.isCurrentlyEmployed());
         requireSponsorship     .set(service.isRequireSponsorship());
+        linkedInProfileUrl     .set(service.getLinkedInProfileUrl());
     }
 
     public void save() {
@@ -97,6 +100,7 @@ public class SettingsViewModel {
         service.setYearsExperience      (yearsExperience.get());
         service.setCurrentlyEmployed    (currentlyEmployed.get());
         service.setRequireSponsorship   (requireSponsorship.get());
+        service.setLinkedInProfileUrl   (linkedInProfileUrl.get());
         
         service.save();
     }
@@ -128,4 +132,6 @@ public class SettingsViewModel {
     public StringProperty  yearsExperienceProperty()        { return yearsExperience; }
     public BooleanProperty currentlyEmployedProperty()      { return currentlyEmployed; }
     public BooleanProperty requireSponsorshipProperty()     { return requireSponsorship; }
+    
+    public StringProperty  linkedInProfileUrlProperty()     { return linkedInProfileUrl; }
 }

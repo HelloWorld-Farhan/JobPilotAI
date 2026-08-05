@@ -53,7 +53,6 @@
                     <Button fx:id="navAutomation"   text="🤖   Automation"   styleClass="nav-btn" maxWidth="Infinity" onAction="#onAutomation"/>
                     <Button fx:id="navApplications" text="📋   Applications" styleClass="nav-btn" maxWidth="Infinity" onAction="#onApplications"/>
                     <Button fx:id="navHistory"      text="📁   History"      styleClass="nav-btn" maxWidth="Infinity" onAction="#onHistory"/>
-                    <Button fx:id="navReports"      text="📈   Reports"      styleClass="nav-btn" maxWidth="Infinity" onAction="#onReports"/>
                     <!-- AI Analyzer Tab -->
                     <Button fx:id="navAi"           text="🧠   Parse Resume"   styleClass="nav-btn" maxWidth="Infinity" onAction="#onAi"/>
                     
