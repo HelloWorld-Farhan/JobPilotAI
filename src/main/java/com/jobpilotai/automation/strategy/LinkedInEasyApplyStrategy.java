@@ -48,9 +48,9 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
             AppLogger.info("Clicked Easy Apply button.");
             
             // 2. Step through the modal
-            for (int i = 0; i < 15; i++) {
-                // Wait briefly for modal transitions
-                Thread.sleep(1500);
+            for (int i = 0; i < 30; i++) {
+                // Wait very briefly for modal transitions
+                Thread.sleep(200);
                 
                 // Check for Submit button first
                 Locator submitBtn = page.locator("button[aria-label='Submit application']");
