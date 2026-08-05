@@ -117,8 +117,10 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
                 Locator genericPrimary = page.locator(".artdeco-modal__actionbar .artdeco-button--primary");
                 if (genericPrimary.count() > 0 && genericPrimary.first().isVisible()) {
                     // Check if it's disabled (means a required field is empty)
-                    boolean isDisabled = (boolean) genericPrimary.first().evaluate("el => el.disabled");
-                    if (isDisabled) {
+                    Boolean isDisabledObj = (Boolean) genericPrimary.first().evaluate(
+                        "el => el.disabled === true || el.getAttribute('aria-disabled') === 'true' || el.classList.contains('disabled')"
+                    );
+                    if (isDisabledObj != null && isDisabledObj) {
                         AppLogger.warn("Primary button is disabled. Stuck on a required field.");
                         return false;
                     }
