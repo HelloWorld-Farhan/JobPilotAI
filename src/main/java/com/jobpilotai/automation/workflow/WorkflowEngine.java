@@ -127,8 +127,13 @@ public class WorkflowEngine {
             boolean success = false;
             
             if (task.getWebsite() != null && task.getWebsite().toLowerCase().contains("linkedin")) {
-                JobApplyStrategy strategy = new LinkedInEasyApplyStrategy();
-                success = strategy.apply(BrowserManager.getInstance().getPage(), task.getJobUrl());
+                if (task.getJobUrl().contains("/jobs/search/") || task.getJobUrl().contains("/search/results/")) {
+                    JobApplyStrategy strategy = new com.jobpilotai.automation.strategy.LinkedInSearchStrategy();
+                    success = strategy.apply(BrowserManager.getInstance().getPage(), task.getJobUrl());
+                } else {
+                    JobApplyStrategy strategy = new LinkedInEasyApplyStrategy();
+                    success = strategy.apply(BrowserManager.getInstance().getPage(), task.getJobUrl());
+                }
             } else {
                 AppLogger.warn("No automation strategy found for website: " + task.getWebsite());
                 // Fallback for unsupported sites (wait briefly, then fail)
