@@ -16,27 +16,24 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
- * Root controller managing the sidebar navigation and content area.
- * <p>
- * Each sidebar button loads the corresponding FXML panel into the main
- * content area using a fade transition.
- * </p>
+ * Root controller – manages the animated sidebar, fade page transitions,
+ * live clock, and active-nav-button state.
  *
- * @author JobPilotAI Team
+ * @author  JobPilotAI Team
  * @version 1.0.0
  */
 public class MainController implements Initializable {
 
-    @FXML private BorderPane  rootPane;
-    @FXML private VBox        sidebar;
-    @FXML private StackPane   contentArea;
-    @FXML private Label       clockLabel;
-    @FXML private Label       versionLabel;
-    @FXML private Button      sidebarToggleBtn;
+    // ── FXML fields ──────────────────────────────────────────────────────────
+    @FXML private BorderPane rootPane;
+    @FXML private VBox       sidebar;
+    @FXML private StackPane  contentArea;
+    @FXML private Label      clockLabel;
+    @FXML private Label      versionLabel;
+    @FXML private Button     sidebarToggleBtn;
 
     @FXML private Button navDashboard;
     @FXML private Button navApplications;
@@ -46,95 +43,128 @@ public class MainController implements Initializable {
     @FXML private Button navLogs;
     @FXML private Button navAbout;
 
-    private boolean sidebarCollapsed = false;
+    // ── State ─────────────────────────────────────────────────────────────────
+    private static final double SIDEBAR_EXPANDED  = 230;
+    private static final double SIDEBAR_COLLAPSED = 64;
+
+    private boolean  sidebarCollapsed = false;
     private Timeline clockTimeline;
+
+    // Labels stored for collapse/expand toggle
+    private static final String[] NAV_FULL_TEXT = {
+        "📊   Dashboard", "📋   Applications", "📁   History",
+        "📈   Reports",   "⚙   Settings",     "📜   Logs",
+        "ℹ   About"
+    };
+    private static final String[] NAV_ICON_TEXT = {
+        "📊", "📋", "📁", "📈", "⚙", "📜", "ℹ"
+    };
+
+    // ── Lifecycle ─────────────────────────────────────────────────────────────
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         versionLabel.setText(AppConfig.APP_VERSION);
         startClock();
-        loadView("dashboard");
+        navigateTo("dashboard");
         setActiveButton(navDashboard);
         AppLogger.info("Main controller initialised.");
     }
 
-    // ── Navigation ───────────────────────────────────────────────────────────
+    // ── Navigation handlers ───────────────────────────────────────────────────
 
-    @FXML private void onDashboard()     { loadView("dashboard");     setActiveButton(navDashboard); }
-    @FXML private void onApplications()  { loadView("applications");  setActiveButton(navApplications); }
-    @FXML private void onHistory()       { loadView("history");        setActiveButton(navHistory); }
-    @FXML private void onReports()       { loadView("reports");        setActiveButton(navReports); }
-    @FXML private void onSettings()      { loadView("settings");       setActiveButton(navSettings); }
-    @FXML private void onLogs()          { loadView("logs");           setActiveButton(navLogs); }
-    @FXML private void onAbout()         { loadView("about");          setActiveButton(navAbout); }
+    @FXML private void onDashboard()    { navigateTo("dashboard");    setActiveButton(navDashboard); }
+    @FXML private void onApplications() { navigateTo("applications"); setActiveButton(navApplications); }
+    @FXML private void onHistory()      { navigateTo("history");      setActiveButton(navHistory); }
+    @FXML private void onReports()      { navigateTo("reports");      setActiveButton(navReports); }
+    @FXML private void onSettings()     { navigateTo("settings");     setActiveButton(navSettings); }
+    @FXML private void onLogs()         { navigateTo("logs");         setActiveButton(navLogs); }
+    @FXML private void onAbout()        { navigateTo("about");        setActiveButton(navAbout); }
 
     @FXML private void onToggleSidebar() {
         sidebarCollapsed = !sidebarCollapsed;
-        double targetWidth = sidebarCollapsed ? 60 : 220;
-        String btnText     = sidebarCollapsed ? "→" : "←";
+        double targetW = sidebarCollapsed ? SIDEBAR_COLLAPSED : SIDEBAR_EXPANDED;
 
-        KeyValue kv = new KeyValue(sidebar.prefWidthProperty(), targetWidth, Interpolator.EASE_BOTH);
-        new Timeline(new KeyFrame(Duration.millis(250), kv)).play();
+        // Animate width
+        KeyValue kv = new KeyValue(
+                sidebar.prefWidthProperty(), targetW, Interpolator.EASE_BOTH);
+        new Timeline(new KeyFrame(Duration.millis(280), kv)).play();
 
-        sidebarToggleBtn.setText(btnText);
-
-        // Show/hide labels in nav buttons
-        for (Node node : sidebar.getChildren()) {
-            if (node instanceof Button btn && btn != sidebarToggleBtn) {
-                String text = btn.getText();
-                if (sidebarCollapsed) {
-                    btn.setUserData(text);
-                    btn.setText(text.length() > 0 ? String.valueOf(text.charAt(0)) : "");
-                } else if (btn.getUserData() != null) {
-                    btn.setText(btn.getUserData().toString());
-                }
-            }
+        // Swap button text labels
+        Button[] navBtns = {navDashboard, navApplications, navHistory,
+                navReports, navSettings, navLogs, navAbout};
+        String[] texts = sidebarCollapsed ? NAV_ICON_TEXT : NAV_FULL_TEXT;
+        for (int i = 0; i < navBtns.length; i++) {
+            navBtns[i].setText(texts[i]);
+            navBtns[i].setAlignment(sidebarCollapsed
+                    ? javafx.geometry.Pos.CENTER
+                    : javafx.geometry.Pos.CENTER_LEFT);
         }
+        sidebarToggleBtn.setText(sidebarCollapsed ? "→" : "← Collapse");
     }
 
-    // ── View Loading ─────────────────────────────────────────────────────────
+    // ── View loading ──────────────────────────────────────────────────────────
 
-    private void loadView(String name) {
+    private void navigateTo(String viewName) {
         try {
-            URL fxmlUrl = getClass().getResource("/fxml/" + name + ".fxml");
+            URL fxmlUrl = getClass().getResource("/fxml/" + viewName + ".fxml");
             if (fxmlUrl == null) {
-                AppLogger.error("FXML not found: " + name);
+                AppLogger.error("FXML not found: " + viewName);
                 return;
             }
             Node view = FXMLLoader.load(fxmlUrl);
 
-            // Fade transition
-            FadeTransition fade = new FadeTransition(Duration.millis(200), view);
-            fade.setFromValue(0);
-            fade.setToValue(1);
+            // Fade out → swap → fade in
+            if (!contentArea.getChildren().isEmpty()) {
+                Node current = contentArea.getChildren().get(0);
+                FadeTransition fadeOut = new FadeTransition(Duration.millis(100), current);
+                fadeOut.setToValue(0);
+                fadeOut.setOnFinished(e -> {
+                    contentArea.getChildren().setAll(view);
+                    FadeTransition fadeIn = new FadeTransition(Duration.millis(220), view);
+                    fadeIn.setFromValue(0);
+                    fadeIn.setToValue(1);
+                    fadeIn.play();
+                });
+                fadeOut.play();
+            } else {
+                contentArea.getChildren().setAll(view);
+                FadeTransition fadeIn = new FadeTransition(Duration.millis(220), view);
+                fadeIn.setFromValue(0);
+                fadeIn.setToValue(1);
+                fadeIn.play();
+            }
 
-            contentArea.getChildren().setAll(view);
-            fade.play();
-
-            AppLogger.debug("Loaded view: " + name);
+            AppLogger.debug("Navigated to: " + viewName);
         } catch (IOException e) {
-            AppLogger.error("Failed to load view: " + name, e);
+            AppLogger.error("Failed to load view: " + viewName, e);
         }
     }
 
+    // ── Active button ─────────────────────────────────────────────────────────
+
     private void setActiveButton(Button active) {
-        Button[] allButtons = {navDashboard, navApplications, navHistory,
+        Button[] all = {navDashboard, navApplications, navHistory,
                 navReports, navSettings, navLogs, navAbout};
-        for (Button btn : allButtons) {
-            btn.getStyleClass().remove("nav-btn-active");
-            btn.getStyleClass().add("nav-btn");
+        for (Button btn : all) {
+            btn.getStyleClass().removeAll("nav-btn-active");
+            if (!btn.getStyleClass().contains("nav-btn")) {
+                btn.getStyleClass().add("nav-btn");
+            }
         }
-        active.getStyleClass().add("nav-btn-active");
+        if (!active.getStyleClass().contains("nav-btn-active")) {
+            active.getStyleClass().add("nav-btn-active");
+        }
     }
 
     // ── Clock ─────────────────────────────────────────────────────────────────
 
     private void startClock() {
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern(AppConfig.DISPLAY_TIME_FMT);
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm:ss");
+        clockLabel.setText(LocalDateTime.now().format(fmt));
         clockTimeline = new Timeline(new KeyFrame(Duration.seconds(1), e ->
-            clockLabel.setText(LocalDateTime.now().format(fmt))));
+                clockLabel.setText(LocalDateTime.now().format(fmt))));
         clockTimeline.setCycleCount(Animation.INDEFINITE);
         clockTimeline.play();
-        clockLabel.setText(LocalDateTime.now().format(fmt));
     }
 }

@@ -5,35 +5,47 @@
 
 <VBox xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.jobpilotai.controller.HistoryController"
-      styleClass="page-root" spacing="16">
+      styleClass="page-root" spacing="0">
     <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
 
-    <HBox alignment="CENTER_LEFT" spacing="12">
-        <Label text="History" styleClass="page-title"/>
+    <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-padding: 0 0 20 0;">
+        <VBox spacing="3">
+            <Label text="History" styleClass="page-title"/>
+            <Label text="Browse and manage your complete application history"
+                   style="-fx-text-fill: #64748B; -fx-font-size: 12px;"/>
+        </VBox>
         <Region HBox.hgrow="ALWAYS"/>
         <Label fx:id="totalLabel" text="Total: 0" styleClass="count-badge"/>
     </HBox>
 
-    <HBox spacing="10" alignment="CENTER_LEFT" styleClass="toolbar">
-        <TextField fx:id="searchField" promptText="🔍  Search history…" prefWidth="280" styleClass="search-field"/>
-        <ComboBox fx:id="statusFilterCombo" prefWidth="160" styleClass="filter-combo"/>
+    <HBox spacing="8" alignment="CENTER_LEFT" styleClass="toolbar"
+          style="-fx-padding: 10 14;">
+        <TextField fx:id="searchField" promptText="🔍  Search history…"
+                   prefWidth="280" styleClass="search-field"/>
+        <ComboBox fx:id="statusFilterCombo" prefWidth="170" styleClass="filter-combo"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button text="📊  Export" styleClass="btn-secondary" onAction="#onExportExcel"/>
-        <Button text="🗑  Delete" styleClass="btn-danger"    onAction="#onDeleteSelected"/>
-        <Button text="🗑  Delete All" styleClass="btn-danger" onAction="#onDeleteAll"/>
-        <Button text="🔄  Refresh" styleClass="btn-secondary" onAction="#onRefresh"/>
+        <Button text="↓  Export"    styleClass="btn-secondary" onAction="#onExportExcel"    prefHeight="38"/>
+        <Button text="✕  Delete"    styleClass="btn-danger"    onAction="#onDeleteSelected" prefHeight="38"/>
+        <Button text="✕  Clear All" styleClass="btn-danger"    onAction="#onDeleteAll"      prefHeight="38"/>
+        <Button text="↺  Refresh"   styleClass="btn-secondary" onAction="#onRefresh"        prefHeight="38"/>
     </HBox>
+
+    <Region style="-fx-pref-height: 12; -fx-min-height: 12; -fx-max-height: 12;"/>
 
     <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
         <columns>
-            <TableColumn fx:id="colId"       text="ID"       prefWidth="50"/>
-            <TableColumn fx:id="colCompany"  text="Company"  prefWidth="180"/>
-            <TableColumn fx:id="colJobTitle" text="Job Title" prefWidth="200"/>
-            <TableColumn fx:id="colStatus"   text="Status"   prefWidth="150"/>
-            <TableColumn fx:id="colDate"     text="Date"     prefWidth="100"/>
-            <TableColumn fx:id="colWebsite"  text="Website"  prefWidth="160"/>
-            <TableColumn fx:id="colNotes"    text="Notes"    prefWidth="220"/>
+            <TableColumn fx:id="colId"       text="ID"       prefWidth="52"  minWidth="52"  maxWidth="70"/>
+            <TableColumn fx:id="colCompany"  text="Company"  prefWidth="185" minWidth="120"/>
+            <TableColumn fx:id="colJobTitle" text="Job Title" prefWidth="200" minWidth="130"/>
+            <TableColumn fx:id="colStatus"   text="Status"   prefWidth="148" minWidth="110"/>
+            <TableColumn fx:id="colDate"     text="Date"     prefWidth="100" minWidth="80"/>
+            <TableColumn fx:id="colWebsite"  text="Website"  prefWidth="160" minWidth="100"/>
+            <TableColumn fx:id="colNotes"    text="Notes"    prefWidth="220" minWidth="100"/>
         </columns>
+        <placeholder>
+            <Label text="No history yet."
+                   style="-fx-text-fill: #475569; -fx-font-size: 14px;"/>
+        </placeholder>
     </TableView>
 
 </VBox>

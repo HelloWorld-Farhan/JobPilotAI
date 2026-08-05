@@ -5,33 +5,72 @@
 
 <VBox xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.jobpilotai.controller.ReportsController"
-      styleClass="page-root" spacing="16">
+      styleClass="page-root" spacing="0">
     <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
 
-    <HBox alignment="CENTER_LEFT" spacing="12">
-        <Label text="Reports" styleClass="page-title"/>
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-padding: 0 0 20 0;">
+        <VBox spacing="3">
+            <Label text="Reports" styleClass="page-title"/>
+            <Label text="Generate and manage Excel reports"
+                   style="-fx-text-fill: #64748B; -fx-font-size: 12px;"/>
+        </VBox>
         <Region HBox.hgrow="ALWAYS"/>
         <Label fx:id="totalLabel" text="Reports: 0" styleClass="count-badge"/>
     </HBox>
 
-    <!-- Generate buttons -->
-    <HBox spacing="12" alignment="CENTER_LEFT" styleClass="toolbar">
-        <Button text="📄  Manual Report"  styleClass="btn-primary"   onAction="#onGenerateManual"/>
-        <Button text="⏱  Hourly Report"  styleClass="btn-secondary"  onAction="#onGenerateHourly"/>
-        <Button text="🏁  Final Report"   styleClass="btn-secondary"  onAction="#onGenerateFinal"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Button text="📂  Open"   styleClass="btn-secondary" onAction="#onOpenSelected"/>
-        <Button text="🗑  Delete" styleClass="btn-danger"    onAction="#onDeleteSelected"/>
-        <Button text="🔄  Refresh" styleClass="btn-secondary" onAction="#onRefresh"/>
+    <!-- Generate Cards -->
+    <HBox spacing="14" style="-fx-padding: 0 0 18 0;">
+
+        <VBox styleClass="info-card" HBox.hgrow="ALWAYS" spacing="10" alignment="CENTER_LEFT">
+            <Label text="📄" style="-fx-font-size: 28px;"/>
+            <Label text="Manual Report" styleClass="card-title"/>
+            <Label text="Export all tracked applications now."
+                   style="-fx-text-fill: #64748B; -fx-font-size: 12px; -fx-wrap-text: true;"/>
+            <Button text="Generate" styleClass="btn-primary" onAction="#onGenerateManual" prefHeight="36"/>
+        </VBox>
+
+        <VBox styleClass="info-card" HBox.hgrow="ALWAYS" spacing="10" alignment="CENTER_LEFT">
+            <Label text="⏱" style="-fx-font-size: 28px;"/>
+            <Label text="Hourly Report" styleClass="card-title"/>
+            <Label text="Export today's applications only."
+                   style="-fx-text-fill: #64748B; -fx-font-size: 12px; -fx-wrap-text: true;"/>
+            <Button text="Generate" styleClass="btn-secondary" onAction="#onGenerateHourly" prefHeight="36"/>
+        </VBox>
+
+        <VBox styleClass="info-card" HBox.hgrow="ALWAYS" spacing="10" alignment="CENTER_LEFT">
+            <Label text="🏁" style="-fx-font-size: 28px;"/>
+            <Label text="Final Report" styleClass="card-title"/>
+            <Label text="Complete summary with all data."
+                   style="-fx-text-fill: #64748B; -fx-font-size: 12px; -fx-wrap-text: true;"/>
+            <Button text="Generate" styleClass="btn-success" onAction="#onGenerateFinal" prefHeight="36"/>
+        </VBox>
+
     </HBox>
+
+    <!-- Toolbar -->
+    <HBox spacing="8" alignment="CENTER_LEFT" styleClass="toolbar"
+          style="-fx-padding: 10 14;">
+        <Label text="Generated Reports" styleClass="card-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="📂  Open"    styleClass="btn-secondary" onAction="#onOpenSelected"  prefHeight="38"/>
+        <Button text="✕  Delete"  styleClass="btn-danger"    onAction="#onDeleteSelected" prefHeight="38"/>
+        <Button text="↺  Refresh" styleClass="btn-secondary" onAction="#onRefresh"        prefHeight="38"/>
+    </HBox>
+
+    <Region style="-fx-pref-height: 12; -fx-min-height: 12; -fx-max-height: 12;"/>
 
     <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
         <columns>
-            <TableColumn fx:id="colId"        text="ID"        prefWidth="50"/>
-            <TableColumn fx:id="colFilename"  text="File Name" prefWidth="320"/>
-            <TableColumn fx:id="colType"      text="Type"      prefWidth="100"/>
-            <TableColumn fx:id="colCreatedAt" text="Created"   prefWidth="180"/>
+            <TableColumn fx:id="colId"        text="ID"        prefWidth="52"  minWidth="52"  maxWidth="70"/>
+            <TableColumn fx:id="colFilename"  text="File Name" prefWidth="340" minWidth="200"/>
+            <TableColumn fx:id="colType"      text="Type"      prefWidth="110" minWidth="80"/>
+            <TableColumn fx:id="colCreatedAt" text="Created"   prefWidth="180" minWidth="140"/>
         </columns>
+        <placeholder>
+            <Label text="No reports generated yet. Click a Generate button above."
+                   style="-fx-text-fill: #475569; -fx-font-size: 14px;"/>
+        </placeholder>
     </TableView>
 
 </VBox>
