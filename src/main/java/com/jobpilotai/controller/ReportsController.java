@@ -91,13 +91,12 @@ public class ReportsController implements Initializable {
     }
 
     private void showInfo(String msg) {
-        new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK).showAndWait();
+        com.jobpilotai.utils.DialogUtils.showAlert("Information", msg);
     }
     private void showError(String msg) {
-        new Alert(Alert.AlertType.ERROR, msg, ButtonType.OK).showAndWait();
+        com.jobpilotai.utils.DialogUtils.showError("Error", msg);
     }
     private boolean confirm(String msg) {
-        return new Alert(Alert.AlertType.CONFIRMATION, msg, ButtonType.YES, ButtonType.NO)
-                .showAndWait().filter(r -> r == ButtonType.YES).isPresent();
+        return com.jobpilotai.utils.DialogUtils.showConfirmation("Confirm Action", msg);
     }
 }

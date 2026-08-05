@@ -110,7 +110,6 @@ public class LogsController implements Initializable {
     }
 
     private boolean confirm(String msg) {
-        return new Alert(Alert.AlertType.CONFIRMATION, msg, ButtonType.YES, ButtonType.NO)
-                .showAndWait().filter(r -> r == ButtonType.YES).isPresent();
+        return com.jobpilotai.utils.DialogUtils.showConfirmation("Confirm", msg);
     }
 }

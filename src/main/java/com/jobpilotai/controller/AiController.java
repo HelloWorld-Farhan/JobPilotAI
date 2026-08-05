@@ -58,7 +58,7 @@ public class AiController implements Initializable {
 
     @FXML private void onAnalyzeResume() {
         if (currentResume == null) {
-            new Alert(Alert.AlertType.WARNING, "Please select a resume file first.", ButtonType.OK).show();
+            com.jobpilotai.utils.DialogUtils.showAlert("Warning", "Please select a resume file first.");
             return;
         }
 
@@ -93,7 +93,7 @@ public class AiController implements Initializable {
         String company = tfCompany.getText();
 
         if (jobText.trim().isEmpty() || title.trim().isEmpty()) {
-            new Alert(Alert.AlertType.WARNING, "Job Title and Description are required.", ButtonType.OK).show();
+            com.jobpilotai.utils.DialogUtils.showAlert("Warning", "Job Title and Description are required.");
             return;
         }
 

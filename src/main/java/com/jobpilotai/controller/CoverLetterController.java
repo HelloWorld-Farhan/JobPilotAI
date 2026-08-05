@@ -55,7 +55,7 @@ public class CoverLetterController implements Initializable {
 
     @FXML private void onGenerate() {
         if (taJobDescription.getText().trim().isEmpty()) {
-            new Alert(Alert.AlertType.WARNING, "Please enter a Job Description first.", ButtonType.OK).show();
+            com.jobpilotai.utils.DialogUtils.showAlert("Warning", "Please enter a Job Description first.");
             return;
         }
 
@@ -75,13 +75,13 @@ public class CoverLetterController implements Initializable {
     }
 
     @FXML private void onExportPdf() {
-        new Alert(Alert.AlertType.INFORMATION, "PDF Export is available via external virtual printers. DOCX export is supported natively.", ButtonType.OK).show();
+        com.jobpilotai.utils.DialogUtils.showAlert("PDF Export", "PDF Export is available via external virtual printers. DOCX export is supported natively.");
     }
 
     @FXML private void onExportDocx() {
         String text = taCoverLetter.getText();
         if (text == null || text.trim().isEmpty() || text.startsWith("AI is writing")) {
-            new Alert(Alert.AlertType.WARNING, "No cover letter to export.", ButtonType.OK).show();
+            com.jobpilotai.utils.DialogUtils.showAlert("Warning", "No cover letter to export.");
             return;
         }
 
@@ -94,9 +94,9 @@ public class CoverLetterController implements Initializable {
         if (file != null) {
             boolean success = CoverLetterGenerator.exportToDocx(text, file);
             if (success) {
-                new Alert(Alert.AlertType.INFORMATION, "Exported successfully!", ButtonType.OK).show();
+                com.jobpilotai.utils.DialogUtils.showAlert("Success", "Exported successfully!");
             } else {
-                new Alert(Alert.AlertType.ERROR, "Export failed. Check logs.", ButtonType.OK).show();
+                com.jobpilotai.utils.DialogUtils.showError("Export Failed", "Export failed. Check logs.");
             }
         }
     }

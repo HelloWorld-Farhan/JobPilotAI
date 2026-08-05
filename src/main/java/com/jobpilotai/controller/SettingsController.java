@@ -157,14 +157,12 @@ public class SettingsController implements Initializable {
             com.jobpilotai.themes.ThemeEngine.applyTheme(cbTheme.getScene(), viewModel.themeProperty().get());
         }
         
-        new Alert(Alert.AlertType.INFORMATION, "Settings & Profile saved successfully.", ButtonType.OK).showAndWait();
+        com.jobpilotai.utils.DialogUtils.showAlert("Success", "Settings & Profile saved successfully.");
         AppLogger.info("Settings & Profile saved by user.");
     }
 
     @FXML private void onReset() {
-        if (new Alert(Alert.AlertType.CONFIRMATION,
-                "Reset all settings to defaults?", ButtonType.YES, ButtonType.NO)
-                .showAndWait().filter(r -> r == ButtonType.YES).isPresent()) {
+        if (com.jobpilotai.utils.DialogUtils.showConfirmation("Reset Settings", "Reset all settings to defaults?")) {
             
             viewModel.themeProperty()            .set("dark");
             viewModel.darkModeProperty()         .set(true);

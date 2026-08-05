@@ -47,35 +47,36 @@
                        style="-fx-padding: 0 20; -fx-opacity: 0.4;"/>
 
             <!-- ── Navigation ── -->
-            <VBox spacing="3" VBox.vgrow="ALWAYS"
-                  style="-fx-padding: 16 12 12 12;">
-                <Button fx:id="navDashboard"    text="📊   Dashboard"    styleClass="nav-btn,nav-btn-active" maxWidth="Infinity" onAction="#onDashboard"/>
-                <Button fx:id="navAutomation"   text="🤖   Automation"   styleClass="nav-btn" maxWidth="Infinity" onAction="#onAutomation"/>
-                <Button fx:id="navApplications" text="📋   Applications" styleClass="nav-btn" maxWidth="Infinity" onAction="#onApplications"/>
-                <Button fx:id="navHistory"      text="📁   History"      styleClass="nav-btn" maxWidth="Infinity" onAction="#onHistory"/>
-                <Button fx:id="navReports"      text="📈   Reports"      styleClass="nav-btn" maxWidth="Infinity" onAction="#onReports"/>
-                <Button fx:id="navSettings"     text="⚙   Settings"     styleClass="nav-btn" maxWidth="Infinity" onAction="#onSettings"/>
-                <Button fx:id="navLogs"         text="📜   Logs"         styleClass="nav-btn" maxWidth="Infinity" onAction="#onLogs"/>
-                <Button fx:id="navAbout"        text="ℹ   About"        styleClass="nav-btn" maxWidth="Infinity" onAction="#onAbout"/>
+            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;" VBox.vgrow="ALWAYS">
+                <VBox spacing="3" style="-fx-padding: 16 12 12 12;">
+                    <Button fx:id="navDashboard"    text="📊   Dashboard"    styleClass="nav-btn,nav-btn-active" maxWidth="Infinity" onAction="#onDashboard"/>
+                    <Button fx:id="navAutomation"   text="🤖   Automation"   styleClass="nav-btn" maxWidth="Infinity" onAction="#onAutomation"/>
+                    <Button fx:id="navApplications" text="📋   Applications" styleClass="nav-btn" maxWidth="Infinity" onAction="#onApplications"/>
+                    <Button fx:id="navHistory"      text="📁   History"      styleClass="nav-btn" maxWidth="Infinity" onAction="#onHistory"/>
+                    <Button fx:id="navReports"      text="📈   Reports"      styleClass="nav-btn" maxWidth="Infinity" onAction="#onReports"/>
+                    <Button fx:id="navSettings"     text="⚙   Settings"     styleClass="nav-btn" maxWidth="Infinity" onAction="#onSettings"/>
+                    <Button fx:id="navLogs"         text="📜   Logs"         styleClass="nav-btn" maxWidth="Infinity" onAction="#onLogs"/>
+                    <Button fx:id="navAbout"        text="ℹ   About"        styleClass="nav-btn" maxWidth="Infinity" onAction="#onAbout"/>
 
-                <!-- AI Analyzer Tab -->
-                <Button fx:id="navAi"           text="🧠   AI Assistant"   styleClass="nav-btn" maxWidth="Infinity" onAction="#onAi"/>
-                
-                <!-- Cover Letter Tab -->
-                <Button fx:id="navCoverLetter"  text="📝   Cover Letters"  styleClass="nav-btn" maxWidth="Infinity" onAction="#onCoverLetter"/>
-                
-                <!-- Company Insights Tab -->
-                <Button fx:id="navCompany"      text="🏢   Company Insights" styleClass="nav-btn" maxWidth="Infinity" onAction="#onCompany"/>
-                
-                <!-- Analytics Tab -->
-                <Button fx:id="navAnalytics"    text="📈   Analytics"      styleClass="nav-btn" maxWidth="Infinity" onAction="#onAnalytics"/>
-                
-                <!-- Diagnostics Tab -->
-                <Button fx:id="navDiagnostics"  text="🩺   Diagnostics"    styleClass="nav-btn" maxWidth="Infinity" onAction="#onDiagnostics"/>
-                
-                <!-- Plugins Tab -->
-                <Button fx:id="navPlugins"      text="🧩   Plugins"        styleClass="nav-btn" maxWidth="Infinity" onAction="#onPlugins"/>
-            </VBox>
+                    <!-- AI Analyzer Tab -->
+                    <Button fx:id="navAi"           text="🧠   AI Assistant"   styleClass="nav-btn" maxWidth="Infinity" onAction="#onAi"/>
+                    
+                    <!-- Cover Letter Tab -->
+                    <Button fx:id="navCoverLetter"  text="📝   Cover Letters"  styleClass="nav-btn" maxWidth="Infinity" onAction="#onCoverLetter"/>
+                    
+                    <!-- Company Insights Tab -->
+                    <Button fx:id="navCompany"      text="🏢   Company Insights" styleClass="nav-btn" maxWidth="Infinity" onAction="#onCompany"/>
+                    
+                    <!-- Analytics Tab -->
+                    <Button fx:id="navAnalytics"    text="📈   Analytics"      styleClass="nav-btn" maxWidth="Infinity" onAction="#onAnalytics"/>
+                    
+                    <!-- Diagnostics Tab -->
+                    <Button fx:id="navDiagnostics"  text="🩺   Diagnostics"    styleClass="nav-btn" maxWidth="Infinity" onAction="#onDiagnostics"/>
+                    
+                    <!-- Plugins Tab -->
+                    <Button fx:id="navPlugins"      text="🧩   Plugins"        styleClass="nav-btn" maxWidth="Infinity" onAction="#onPlugins"/>
+                </VBox>
+            </ScrollPane>
 
             <!-- ── Footer ── -->
             <VBox alignment="CENTER" spacing="10" style="-fx-padding: 0 16 20 16;">

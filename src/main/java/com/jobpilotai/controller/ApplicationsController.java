@@ -245,20 +245,14 @@ public class ApplicationsController implements Initializable {
     private Label lbl(String text) { return new Label(text); }
 
     private void showInfo(String msg) {
-        Alert a = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
-        a.setHeaderText(null);
-        a.showAndWait();
+        com.jobpilotai.utils.DialogUtils.showAlert("Information", msg);
     }
 
     private void showError(String msg) {
-        Alert a = new Alert(Alert.AlertType.ERROR, msg, ButtonType.OK);
-        a.setHeaderText(null);
-        a.showAndWait();
+        com.jobpilotai.utils.DialogUtils.showError("Error", msg);
     }
 
     private boolean confirm(String msg) {
-        Alert a = new Alert(Alert.AlertType.CONFIRMATION, msg, ButtonType.YES, ButtonType.NO);
-        a.setHeaderText(null);
-        return a.showAndWait().filter(r -> r == ButtonType.YES).isPresent();
+        return com.jobpilotai.utils.DialogUtils.showConfirmation("Confirm Action", msg);
     }
 }

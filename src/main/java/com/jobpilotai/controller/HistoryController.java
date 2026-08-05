@@ -86,28 +86,25 @@ public class HistoryController implements Initializable {
     @FXML private void onExportExcel() {
         try {
             ReportService.getInstance().generateManualReport();
-            new Alert(Alert.AlertType.INFORMATION, "Exported to reports folder.", ButtonType.OK).showAndWait();
+            com.jobpilotai.utils.DialogUtils.showAlert("Export Successful", "Exported to reports folder.");
         } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR, "Export failed: " + e.getMessage(), ButtonType.OK).showAndWait();
+            com.jobpilotai.utils.DialogUtils.showError("Export Failed", "Export failed: " + e.getMessage());
         }
     }
 
     @FXML private void onDeleteSelected() {
         JobApplication sel = table.getSelectionModel().getSelectedItem();
-        if (sel == null) { new Alert(Alert.AlertType.INFORMATION, "Select an item to delete.", ButtonType.OK).showAndWait(); return; }
-        if (new Alert(Alert.AlertType.CONFIRMATION, "Delete this entry?", ButtonType.YES, ButtonType.NO)
-                .showAndWait().filter(r -> r == ButtonType.YES).isPresent()) {
+        if (sel == null) { com.jobpilotai.utils.DialogUtils.showAlert("Select Item", "Select an item to delete."); return; }
+        if (com.jobpilotai.utils.DialogUtils.showConfirmation("Delete Entry", "Delete this entry?")) {
             try { viewModel.delete(sel.getId()); }
-            catch (Exception e) { new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait(); }
+            catch (Exception e) { com.jobpilotai.utils.DialogUtils.showError("Delete Failed", e.getMessage()); }
         }
     }
 
     @FXML private void onDeleteAll() {
-        if (new Alert(Alert.AlertType.CONFIRMATION, "Delete ALL history? This cannot be undone.",
-                ButtonType.YES, ButtonType.NO)
-                .showAndWait().filter(r -> r == ButtonType.YES).isPresent()) {
+        if (com.jobpilotai.utils.DialogUtils.showConfirmation("Delete All History", "Delete ALL history? This cannot be undone.")) {
             try { viewModel.deleteAll(); }
-            catch (Exception e) { new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait(); }
+            catch (Exception e) { com.jobpilotai.utils.DialogUtils.showError("Delete Failed", e.getMessage()); }
         }
     }
 
