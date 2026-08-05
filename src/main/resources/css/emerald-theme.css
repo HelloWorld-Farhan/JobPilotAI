@@ -1,0 +1,11 @@
+/* JobPilotAI Emerald Theme */
+* {
+    -fx-base: #1b4332;
+    -fx-control-inner-background: #1b4332;
+    -fx-control-inner-background-alt: derive(-fx-control-inner-background, -5%);
+    -fx-color: #2d6a4f;
+    -fx-text-base-color: #d8f3dc;
+    -fx-text-fill: #d8f3dc;
+    -fx-text-inner-color: #d8f3dc;
+    -fx-accent: #74c69d;
+}

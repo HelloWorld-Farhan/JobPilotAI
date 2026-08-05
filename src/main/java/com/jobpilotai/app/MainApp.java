@@ -110,13 +110,46 @@ public class MainApp extends Application {
         // Global Keyboard Shortcuts
         KeyCombination newAppShortcut = new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN);
         KeyCombination searchShortcut = new KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN);
+        KeyCombination globalSearchShortcut = new KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
+        KeyCombination openShortcut = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
+        KeyCombination saveShortcut = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
+        KeyCombination refreshShortcut = new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN);
+        KeyCombination backupShortcut = new KeyCodeCombination(KeyCode.B, KeyCombination.CONTROL_DOWN);
+        KeyCombination pluginsShortcut = new KeyCodeCombination(KeyCode.P, KeyCombination.CONTROL_DOWN);
+        KeyCombination helpShortcut = new KeyCodeCombination(KeyCode.F1);
+        KeyCombination refreshF5Shortcut = new KeyCodeCombination(KeyCode.F5);
+        KeyCombination fullscreenShortcut = new KeyCodeCombination(KeyCode.F11);
         
         scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             if (newAppShortcut.match(event)) {
                 System.out.println("Global Shortcut: New Application triggered.");
                 event.consume();
+            } else if (globalSearchShortcut.match(event)) {
+                System.out.println("Global Shortcut: Global Search triggered.");
+                event.consume();
             } else if (searchShortcut.match(event)) {
                 System.out.println("Global Shortcut: Search triggered.");
+                event.consume();
+            } else if (openShortcut.match(event)) {
+                System.out.println("Global Shortcut: Open Workspace triggered.");
+                event.consume();
+            } else if (saveShortcut.match(event)) {
+                System.out.println("Global Shortcut: Save Workspace triggered.");
+                event.consume();
+            } else if (refreshShortcut.match(event) || refreshF5Shortcut.match(event)) {
+                System.out.println("Global Shortcut: Refresh triggered.");
+                event.consume();
+            } else if (backupShortcut.match(event)) {
+                System.out.println("Global Shortcut: Backup triggered.");
+                event.consume();
+            } else if (pluginsShortcut.match(event)) {
+                System.out.println("Global Shortcut: Plugins triggered.");
+                event.consume();
+            } else if (helpShortcut.match(event)) {
+                System.out.println("Global Shortcut: Help triggered.");
+                event.consume();
+            } else if (fullscreenShortcut.match(event)) {
+                stage.setFullScreen(!stage.isFullScreen());
                 event.consume();
             }
         });

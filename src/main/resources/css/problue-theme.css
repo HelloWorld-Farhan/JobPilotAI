@@ -1,0 +1,11 @@
+/* JobPilotAI Professional Blue Theme */
+* {
+    -fx-base: #1e3a8a;
+    -fx-control-inner-background: #1e3a8a;
+    -fx-control-inner-background-alt: derive(-fx-control-inner-background, -5%);
+    -fx-color: #2563eb;
+    -fx-text-base-color: #eff6ff;
+    -fx-text-fill: #eff6ff;
+    -fx-text-inner-color: #eff6ff;
+    -fx-accent: #3b82f6;
+}

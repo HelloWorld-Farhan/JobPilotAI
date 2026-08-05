@@ -1,0 +1,11 @@
+/* JobPilotAI Ocean Theme */
+* {
+    -fx-base: #005f73;
+    -fx-control-inner-background: #005f73;
+    -fx-control-inner-background-alt: derive(-fx-control-inner-background, -5%);
+    -fx-color: #0a9396;
+    -fx-text-base-color: #e9d8a6;
+    -fx-text-fill: #e9d8a6;
+    -fx-text-inner-color: #e9d8a6;
+    -fx-accent: #ee9b00;
+}

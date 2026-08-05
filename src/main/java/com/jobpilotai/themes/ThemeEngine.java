@@ -16,6 +16,9 @@ public class ThemeEngine {
         THEMES.put("light", "/css/light-theme.css");
         THEMES.put("blue", "/css/blue-theme.css");
         THEMES.put("midnight", "/css/midnight-theme.css");
+        THEMES.put("ocean", "/css/ocean-theme.css");
+        THEMES.put("emerald", "/css/emerald-theme.css");
+        THEMES.put("problue", "/css/problue-theme.css");
     }
 
     public static void applyTheme(Scene scene, String themeName) {

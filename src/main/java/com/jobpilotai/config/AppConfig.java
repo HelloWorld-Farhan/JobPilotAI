@@ -27,7 +27,7 @@ public final class AppConfig {
 
     // ── Database ─────────────────────────────────────────────────────────────
     public static final String DB_FILE_NAME = "jobpilotai.db";
-    public static final int    DB_VERSION   = 4;
+    public static final int    DB_VERSION   = 5;
 
     // ── Settings keys ────────────────────────────────────────────────────────
     public static final String SETTING_THEME              = "theme";
