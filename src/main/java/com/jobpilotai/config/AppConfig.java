@@ -53,6 +53,11 @@ public final class AppConfig {
     public static final String SETTING_MAX_RETRIES        = "max_retries";
     public static final String SETTING_GEMINI_API_KEY     = "gemini_api_key";
     public static final String SETTING_AI_ENABLED         = "ai_enabled";
+    public static final String SETTING_CURRENT_SALARY     = "current_salary";
+    public static final String SETTING_EXPECTED_SALARY    = "expected_salary";
+    public static final String SETTING_YEARS_EXP          = "years_experience";
+    public static final String SETTING_CURRENTLY_EMPLOYED = "currently_employed";
+    public static final String SETTING_REQUIRE_SPONSORSHIP= "require_sponsorship";
 
     // ── Defaults ─────────────────────────────────────────────────────────────
     public static final String DEFAULT_THEME         = "dark";
@@ -66,6 +71,8 @@ public final class AppConfig {
     public static final int     DEFAULT_TIMEOUT      = 30000;
     public static final int     DEFAULT_MAX_RETRIES  = 3;
     public static final boolean DEFAULT_AI_ENABLED   = false;
+    public static final boolean DEFAULT_CURRENTLY_EMPLOYED = false;
+    public static final boolean DEFAULT_REQUIRE_SPONSORSHIP = false;
 
     // ── Report types ─────────────────────────────────────────────────────────
     public static final String REPORT_MANUAL  = "MANUAL";

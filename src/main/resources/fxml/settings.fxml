@@ -57,6 +57,36 @@
                 </GridPane>
             </VBox>
 
+            <!-- ── Application Auto-Fill Profile ── -->
+            <VBox styleClass="settings-card" spacing="16">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="📋" style="-fx-font-size: 16px;"/>
+                    <Label text="Application Auto-Fill Profile" styleClass="settings-section-title"/>
+                </HBox>
+                <Separator style="-fx-opacity: 0.4;"/>
+
+                <GridPane hgap="20" vgap="12">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="120"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                        <ColumnConstraints minWidth="130"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                    </columnConstraints>
+                    
+                    <Label text="Current Salary" styleClass="settings-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <TextField fx:id="tfCurrentSalary" promptText="e.g. 80000" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    
+                    <Label text="Expected Salary" styleClass="settings-label" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                    <TextField fx:id="tfExpectedSalary" promptText="e.g. 100000" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+                    <Label text="Years of Experience" styleClass="settings-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <TextField fx:id="tfYearsExp" promptText="e.g. 3" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    
+                    <CheckBox fx:id="chkCurrentlyEmployed" text="Currently Employed" styleClass="settings-checkbox" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                    <CheckBox fx:id="chkRequireSponsorship" text="Require Sponsorship" styleClass="settings-checkbox" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                </GridPane>
+            </VBox>
+
             <!-- ── File Paths ── -->
             <VBox styleClass="settings-card" spacing="16">
                 <HBox alignment="CENTER_LEFT" spacing="10">

@@ -29,6 +29,12 @@ public class SettingsViewModel {
     private final StringProperty  geminiApiKey         = new SimpleStringProperty();
     private final BooleanProperty aiEnabled            = new SimpleBooleanProperty();
 
+    private final StringProperty  currentSalary        = new SimpleStringProperty();
+    private final StringProperty  expectedSalary       = new SimpleStringProperty();
+    private final StringProperty  yearsExperience      = new SimpleStringProperty();
+    private final BooleanProperty currentlyEmployed    = new SimpleBooleanProperty();
+    private final BooleanProperty requireSponsorship   = new SimpleBooleanProperty();
+
     public void load() {
         resumePath             .set(service.getResumePath());
         defaultEmail           .set(service.getDefaultEmail());
@@ -51,6 +57,12 @@ public class SettingsViewModel {
         
         geminiApiKey           .set(service.getGeminiApiKey());
         aiEnabled              .set(service.isAiEnabled());
+        
+        currentSalary          .set(service.getCurrentSalary());
+        expectedSalary         .set(service.getExpectedSalary());
+        yearsExperience        .set(service.getYearsExperience());
+        currentlyEmployed      .set(service.isCurrentlyEmployed());
+        requireSponsorship     .set(service.isRequireSponsorship());
     }
 
     public void save() {
@@ -80,6 +92,12 @@ public class SettingsViewModel {
         service.setGeminiApiKey         (geminiApiKey.get());
         service.setAiEnabled            (aiEnabled.get());
         
+        service.setCurrentSalary        (currentSalary.get());
+        service.setExpectedSalary       (expectedSalary.get());
+        service.setYearsExperience      (yearsExperience.get());
+        service.setCurrentlyEmployed    (currentlyEmployed.get());
+        service.setRequireSponsorship   (requireSponsorship.get());
+        
         service.save();
     }
 
@@ -104,4 +122,10 @@ public class SettingsViewModel {
     
     public StringProperty  geminiApiKeyProperty()           { return geminiApiKey; }
     public BooleanProperty aiEnabledProperty()              { return aiEnabled; }
+    
+    public StringProperty  currentSalaryProperty()          { return currentSalary; }
+    public StringProperty  expectedSalaryProperty()         { return expectedSalary; }
+    public StringProperty  yearsExperienceProperty()        { return yearsExperience; }
+    public BooleanProperty currentlyEmployedProperty()      { return currentlyEmployed; }
+    public BooleanProperty requireSponsorshipProperty()     { return requireSponsorship; }
 }

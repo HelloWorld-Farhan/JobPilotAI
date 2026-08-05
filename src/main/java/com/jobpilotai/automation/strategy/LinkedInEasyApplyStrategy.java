@@ -1,9 +1,11 @@
 package com.jobpilotai.automation.strategy;
 
 import com.jobpilotai.logs.AppLogger;
+import com.jobpilotai.service.SettingsService;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitForSelectorState;
+import java.util.List;
 
 public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
 
@@ -38,6 +40,9 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
                     Thread.sleep(3000);
                     return true;
                 }
+                
+                // Before clicking Next/Review, try to auto-fill visible form fields
+                autoFillFormFields(page);
                 
                 // Check for Review button
                 Locator reviewBtn = page.locator("button[aria-label='Review your application']");
@@ -82,6 +87,75 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
         } catch (Exception e) {
             AppLogger.error("Error during LinkedIn Easy Apply flow.", e);
             return false;
+        }
+    }
+    
+    private void autoFillFormFields(Page page) {
+        SettingsService settings = SettingsService.getInstance();
+        
+        try {
+            // 1. Text Inputs (Salary, Experience)
+            Locator textInputs = page.locator("div.jobs-easy-apply-form-section__grouping input[type='text']");
+            for (int i = 0; i < textInputs.count(); i++) {
+                Locator input = textInputs.nth(i);
+                if (!input.isVisible()) continue;
+                
+                // Get the corresponding label
+                String labelId = input.getAttribute("id");
+                Locator labelNode = page.locator("label[for='" + labelId + "']");
+                if (labelNode.count() == 0) continue;
+                
+                String labelText = labelNode.innerText().toLowerCase();
+                String currentValue = input.inputValue();
+                
+                // Only fill if empty
+                if (currentValue != null && !currentValue.trim().isEmpty()) continue;
+                
+                if (labelText.contains("salary") || labelText.contains("compensation")) {
+                    input.fill(settings.getExpectedSalary() != null ? settings.getExpectedSalary() : "");
+                    AppLogger.info("Auto-filled salary input.");
+                } else if (labelText.contains("experience") || labelText.contains("years")) {
+                    input.fill(settings.getYearsExperience() != null ? settings.getYearsExperience() : "");
+                    AppLogger.info("Auto-filled experience input.");
+                }
+            }
+            
+            // 2. Radio Buttons / Selects (Sponsorship, Citizenship, Employment)
+            Locator fieldsets = page.locator("fieldset");
+            for (int i = 0; i < fieldsets.count(); i++) {
+                Locator fieldset = fieldsets.nth(i);
+                if (!fieldset.isVisible()) continue;
+                
+                Locator legend = fieldset.locator("legend");
+                if (legend.count() == 0) continue;
+                String questionText = legend.innerText().toLowerCase();
+                
+                String targetAnswer = null;
+                if (questionText.contains("sponsorship") || questionText.contains("visa")) {
+                    targetAnswer = settings.isRequireSponsorship() ? "yes" : "no";
+                } else if (questionText.contains("currently employed") || questionText.contains("employment")) {
+                    targetAnswer = settings.isCurrentlyEmployed() ? "yes" : "no";
+                }
+                
+                if (targetAnswer != null) {
+                    // Check if already answered by seeing if a radio is checked
+                    Locator checkedRadio = fieldset.locator("input[type='radio']:checked");
+                    if (checkedRadio.count() > 0) continue; // Already answered
+                    
+                    // Find the label matching target answer
+                    Locator labels = fieldset.locator("label");
+                    for (int j = 0; j < labels.count(); j++) {
+                        Locator lbl = labels.nth(j);
+                        if (lbl.innerText().toLowerCase().trim().equals(targetAnswer)) {
+                            lbl.click();
+                            AppLogger.info("Auto-selected '" + targetAnswer + "' for question: " + questionText);
+                            break;
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            AppLogger.warn("Error during autoFillFormFields: " + e.getMessage());
         }
     }
 }

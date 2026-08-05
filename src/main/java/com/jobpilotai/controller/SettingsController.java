@@ -24,6 +24,13 @@ public class SettingsController implements Initializable {
     @FXML private TextField tfLinkedinUrl;
     @FXML private TextField tfGithubUrl;
     
+    // Auto-Fill Profile
+    @FXML private TextField tfCurrentSalary;
+    @FXML private TextField tfExpectedSalary;
+    @FXML private TextField tfYearsExp;
+    @FXML private CheckBox  chkCurrentlyEmployed;
+    @FXML private CheckBox  chkRequireSponsorship;
+    
     // File Paths & Account
     @FXML private TextField    tfResumePath;
     @FXML private TextField    tfDefaultEmail;
@@ -88,6 +95,12 @@ public class SettingsController implements Initializable {
         
         chkAiEnabled       .selectedProperty().bindBidirectional(viewModel.aiEnabledProperty());
         tfGeminiApiKey     .textProperty().bindBidirectional(viewModel.geminiApiKeyProperty());
+        
+        tfCurrentSalary    .textProperty().bindBidirectional(viewModel.currentSalaryProperty());
+        tfExpectedSalary   .textProperty().bindBidirectional(viewModel.expectedSalaryProperty());
+        tfYearsExp         .textProperty().bindBidirectional(viewModel.yearsExperienceProperty());
+        chkCurrentlyEmployed.selectedProperty().bindBidirectional(viewModel.currentlyEmployedProperty());
+        chkRequireSponsorship.selectedProperty().bindBidirectional(viewModel.requireSponsorshipProperty());
     }
 
     private void loadUserProfile() {

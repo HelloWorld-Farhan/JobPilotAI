@@ -37,7 +37,15 @@ public class SettingsService {
     private boolean headlessMode;
     private boolean screenshotOnError;
     private int timeoutMs;
+    private int timeoutMs;
     private int maxRetries;
+    
+    // Auto-Fill Profile
+    private String currentSalary;
+    private String expectedSalary;
+    private String yearsExperience;
+    private boolean currentlyEmployed;
+    private boolean requireSponsorship;
 
     private SettingsService() {}
 
@@ -70,6 +78,12 @@ public class SettingsService {
         geminiApiKey         = EncryptionService.decrypt(repo.get(AppConfig.SETTING_GEMINI_API_KEY, ""));
         aiEnabled            = bool(repo.get(AppConfig.SETTING_AI_ENABLED, String.valueOf(AppConfig.DEFAULT_AI_ENABLED)));
 
+        currentSalary        = repo.get(AppConfig.SETTING_CURRENT_SALARY, "");
+        expectedSalary       = repo.get(AppConfig.SETTING_EXPECTED_SALARY, "");
+        yearsExperience      = repo.get(AppConfig.SETTING_YEARS_EXP, "");
+        currentlyEmployed    = bool(repo.get(AppConfig.SETTING_CURRENTLY_EMPLOYED, String.valueOf(AppConfig.DEFAULT_CURRENTLY_EMPLOYED)));
+        requireSponsorship   = bool(repo.get(AppConfig.SETTING_REQUIRE_SPONSORSHIP, String.valueOf(AppConfig.DEFAULT_REQUIRE_SPONSORSHIP)));
+
         AppLogger.info("Settings loaded. Theme=" + theme);
     }
 
@@ -95,6 +109,12 @@ public class SettingsService {
         
         repo.set(AppConfig.SETTING_GEMINI_API_KEY, EncryptionService.encrypt(geminiApiKey));
         repo.set(AppConfig.SETTING_AI_ENABLED,     String.valueOf(aiEnabled));
+
+        repo.set(AppConfig.SETTING_CURRENT_SALARY, currentSalary);
+        repo.set(AppConfig.SETTING_EXPECTED_SALARY, expectedSalary);
+        repo.set(AppConfig.SETTING_YEARS_EXP,      yearsExperience);
+        repo.set(AppConfig.SETTING_CURRENTLY_EMPLOYED, String.valueOf(currentlyEmployed));
+        repo.set(AppConfig.SETTING_REQUIRE_SPONSORSHIP, String.valueOf(requireSponsorship));
 
         AppLogger.info("Settings saved.");
     }
@@ -188,4 +208,15 @@ public class SettingsService {
     public void setGeminiApiKey(String key) { this.geminiApiKey = key; }
     public boolean isAiEnabled() { return aiEnabled; }
     public void setAiEnabled(boolean enabled) { this.aiEnabled = enabled; }
+    
+    public String getCurrentSalary() { return currentSalary; }
+    public void setCurrentSalary(String s) { this.currentSalary = s; }
+    public String getExpectedSalary() { return expectedSalary; }
+    public void setExpectedSalary(String s) { this.expectedSalary = s; }
+    public String getYearsExperience() { return yearsExperience; }
+    public void setYearsExperience(String s) { this.yearsExperience = s; }
+    public boolean isCurrentlyEmployed() { return currentlyEmployed; }
+    public void setCurrentlyEmployed(boolean b) { this.currentlyEmployed = b; }
+    public boolean isRequireSponsorship() { return requireSponsorship; }
+    public void setRequireSponsorship(boolean b) { this.requireSponsorship = b; }
 }
