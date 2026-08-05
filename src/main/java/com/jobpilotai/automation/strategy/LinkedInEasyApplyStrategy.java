@@ -20,10 +20,23 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
             String currentUrl = page.url().toLowerCase();
             if (currentUrl.contains("/login") || currentUrl.contains("/checkpoint") || currentUrl.contains("/auth/")) {
                 com.jobpilotai.service.NotificationService.getInstance().notify("JobPilotAI: Security Challenge", 
-                    "Automation is paused for 3 minutes. Please complete the login or 2FA challenge on LinkedIn.");
+                    "Automation is paused. Please complete the login or 2FA challenge on LinkedIn.");
+                
+                AppLogger.info("Waiting for you to complete login/2FA. Automation will resume instantly once done...");
+                long maxWaitTime = System.currentTimeMillis() + 180000;
+                while (System.currentTimeMillis() < maxWaitTime) {
+                    currentUrl = page.url().toLowerCase();
+                    if (!currentUrl.contains("/login") && !currentUrl.contains("/checkpoint") && !currentUrl.contains("/auth/")) {
+                        AppLogger.info("Login/2FA completed! Navigating back to target URL...");
+                        page.navigate(url);
+                        Thread.sleep(3000);
+                        break;
+                    }
+                    Thread.sleep(2000);
+                }
             }
             
-            AppLogger.info("Waiting for the Easy Apply button. If you are on a security challenge or 2FA, you have 3 minutes.");
+            AppLogger.info("Waiting for the Easy Apply button. You have 3 minutes.");
             try {
                 easyApplyBtn.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE).setTimeout(180000));
             } catch (Exception e) {

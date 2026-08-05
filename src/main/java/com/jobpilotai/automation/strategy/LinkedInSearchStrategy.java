@@ -21,10 +21,23 @@ public class LinkedInSearchStrategy implements JobApplyStrategy {
             String currentUrl = page.url().toLowerCase();
             if (currentUrl.contains("/login") || currentUrl.contains("/checkpoint") || currentUrl.contains("/auth/")) {
                 com.jobpilotai.service.NotificationService.getInstance().notify("JobPilotAI: Security Challenge", 
-                    "Automation is paused for 3 minutes. Please complete the login or 2FA challenge on LinkedIn.");
+                    "Automation is paused. Please complete the login or 2FA challenge on LinkedIn.");
+                
+                AppLogger.info("Waiting for you to complete login/2FA. Automation will resume instantly once done...");
+                long maxWaitTime = System.currentTimeMillis() + 180000;
+                while (System.currentTimeMillis() < maxWaitTime) {
+                    currentUrl = page.url().toLowerCase();
+                    if (!currentUrl.contains("/login") && !currentUrl.contains("/checkpoint") && !currentUrl.contains("/auth/")) {
+                        AppLogger.info("Login/2FA completed! Navigating back to target URL...");
+                        page.navigate(url);
+                        Thread.sleep(3000);
+                        break;
+                    }
+                    Thread.sleep(2000);
+                }
             }
             
-            AppLogger.info("Waiting for the job list container. If you see a login or 2FA screen, please solve it now. You have 3 minutes.");
+            AppLogger.info("Waiting for the job list container. You have 3 minutes.");
             Locator listContainer = page.locator(".jobs-search-results-list, .scaffold-layout__list").first();
             
             try {
