@@ -100,6 +100,9 @@ public class WorkflowEngine {
                 }
 
                 setState("Running");
+                com.jobpilotai.automation.browser.BrowserManager.getInstance().setHeadless(
+                    com.jobpilotai.service.SettingsService.getInstance().isHeadlessMode()
+                );
                 executeTask(currentTask);
 
             } catch (InterruptedException e) {

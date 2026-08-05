@@ -44,7 +44,9 @@ public class BrowserManager {
             Path userDataDir = Paths.get("browser_data");
             
             context = playwright.chromium().launchPersistentContext(userDataDir, 
-                new BrowserType.LaunchPersistentContextOptions().setHeadless(headless));
+                new BrowserType.LaunchPersistentContextOptions()
+                    .setHeadless(headless)
+                    .setChannel("chrome"));
             context.setDefaultTimeout(timeoutMs);
             
             if (context.pages().isEmpty()) {
