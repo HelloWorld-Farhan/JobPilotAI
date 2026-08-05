@@ -40,32 +40,14 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
             
             while (System.currentTimeMillis() < maxWait) {
                 try {
-                    // Ultimate Fallback: Inject JavaScript directly into the browser to find and click the button.
-                    // This bypasses Playwright's locator engine entirely, avoiding all strict mode, visibility, and overlay bugs.
-                    Boolean jsClicked = (Boolean) page.evaluate(
-                        "() => {" +
-                        "  let elements = Array.from(document.querySelectorAll('button, a'));" +
-                        "  for (let el of elements) {" +
-                        "    let text = (el.innerText || '').toLowerCase().trim();" +
-                        "    let aria = (el.getAttribute('aria-label') || '').toLowerCase();" +
-                        "    if (text.includes('easy apply') || aria.includes('easy apply')) {" +
-                        "      let style = window.getComputedStyle(el);" +
-                        "      if (el.offsetWidth > 0 && el.offsetHeight > 0 && style.visibility !== 'hidden') {" +
-                        "        el.click();" +
-                        "        return true;" +
-                        "      }" +
-                        "    }" +
-                        "  }" +
-                        "  return false;" +
-                        "}"
-                    );
-                    
-                    if (jsClicked != null && jsClicked) {
+                    Locator easyApplyBtn = page.locator(".jobs-apply-button:has-text('Easy Apply')");
+                    if (easyApplyBtn.count() > 0) {
+                        easyApplyBtn.first().click(new Locator.ClickOptions().setForce(true));
                         clicked = true;
                         break;
                     }
                 } catch (Exception e) {
-                    AppLogger.warn("Error evaluating JS for button: " + e.getMessage());
+                    AppLogger.warn("Error finding/clicking Easy Apply button: " + e.getMessage());
                 }
                 Thread.sleep(500); // Poll very fast
             }
