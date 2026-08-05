@@ -46,7 +46,6 @@ public class BrowserManager {
             context = playwright.chromium().launchPersistentContext(userDataDir, 
                 new BrowserType.LaunchPersistentContextOptions()
                     .setHeadless(headless)
-                    .setChannel("chrome")
                     .setIgnoreDefaultArgs(java.util.List.of("--enable-automation"))
                     .setArgs(java.util.List.of("--disable-blink-features=AutomationControlled")));
             context.setDefaultTimeout(timeoutMs);
