@@ -1,0 +1,149 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   JobPilotAI – dark-theme.css
+   Dark colour palette variables.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.root {
+    /* Backgrounds */
+    --bg-primary:    #0F172A;
+    --bg-secondary:  #1E293B;
+    --sidebar-bg:    #111827;
+    --card-bg:       #1F2937;
+    --input-bg:      #111827;
+    --hover-bg:      rgba(59, 130, 246, 0.08);
+
+    /* Accent colours */
+    --accent:        #3B82F6;
+    --accent-hover:  #2563EB;
+    --success:       #22C55E;
+    --warning:       #F59E0B;
+    --danger:        #EF4444;
+    --info:          #06B6D4;
+
+    /* Text */
+    --text-primary:   #F1F5F9;
+    --text-secondary: #94A3B8;
+
+    /* Border */
+    --border: #334155;
+}
+
+/* Dark mode overrides for JavaFX built-in controls */
+.root {
+    -fx-background-color: #0F172A;
+    -fx-base: #1E293B;
+    -fx-control-inner-background: #1F2937;
+    -fx-accent: #3B82F6;
+    -fx-focus-color: #3B82F6;
+    -fx-faint-focus-color: rgba(59, 130, 246, 0.1);
+    -fx-text-fill: #F1F5F9;
+}
+
+.label {
+    -fx-text-fill: #F1F5F9;
+}
+
+.text-field {
+    -fx-background-color: #111827;
+    -fx-text-fill: #F1F5F9;
+    -fx-prompt-text-fill: #64748B;
+}
+
+.combo-box {
+    -fx-background-color: #111827;
+    -fx-text-fill: #F1F5F9;
+}
+
+.combo-box .cell {
+    -fx-text-fill: #F1F5F9;
+}
+
+.list-cell {
+    -fx-background-color: #1F2937;
+    -fx-text-fill: #F1F5F9;
+}
+
+.list-cell:selected {
+    -fx-background-color: #3B82F6;
+    -fx-text-fill: white;
+}
+
+.dialog-pane {
+    -fx-background-color: #1E293B;
+    -fx-border-color: #334155;
+}
+
+.dialog-pane .header-panel {
+    -fx-background-color: #111827;
+}
+
+.dialog-pane .content {
+    -fx-background-color: #1E293B;
+}
+
+.dialog-pane .button-bar {
+    -fx-background-color: #1E293B;
+}
+
+.button {
+    -fx-text-fill: #F1F5F9;
+    -fx-background-color: #334155;
+    -fx-background-radius: 8;
+    -fx-border-width: 0;
+}
+
+.button:hover {
+    -fx-background-color: #475569;
+}
+
+.button:default {
+    -fx-background-color: #3B82F6;
+    -fx-text-fill: white;
+}
+
+.menu-bar {
+    -fx-background-color: #111827;
+}
+
+.context-menu {
+    -fx-background-color: #1E293B;
+    -fx-border-color: #334155;
+    -fx-background-radius: 10;
+}
+
+.menu-item {
+    -fx-background-color: transparent;
+}
+
+.menu-item:hover, .menu-item:focused {
+    -fx-background-color: #334155;
+}
+
+.menu-item .label {
+    -fx-text-fill: #F1F5F9;
+}
+
+.split-pane {
+    -fx-background-color: #0F172A;
+}
+
+.split-pane-divider {
+    -fx-background-color: #334155;
+    -fx-padding: 0 1;
+}
+
+.check-box .label {
+    -fx-text-fill: #F1F5F9;
+}
+
+.hyperlink {
+    -fx-text-fill: #3B82F6;
+}
+
+.hyperlink:visited {
+    -fx-text-fill: #818CF8;
+}
+
+/* Alert dialogs */
+.alert .dialog-pane {
+    -fx-background-color: #1E293B;
+}

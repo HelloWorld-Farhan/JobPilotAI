@@ -1,0 +1,106 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   JobPilotAI – light-theme.css
+   Light colour palette variables.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.root {
+    /* Backgrounds */
+    --bg-primary:   #F8FAFC;
+    --bg-secondary: #F1F5F9;
+    --sidebar-bg:   #E2E8F0;
+    --card-bg:      #FFFFFF;
+    --input-bg:     #F8FAFC;
+    --hover-bg:     rgba(37, 99, 235, 0.07);
+
+    /* Accent colours */
+    --accent:        #2563EB;
+    --accent-hover:  #1D4ED8;
+    --success:       #16A34A;
+    --warning:       #D97706;
+    --danger:        #DC2626;
+    --info:          #0891B2;
+
+    /* Text */
+    --text-primary:   #0F172A;
+    --text-secondary: #64748B;
+
+    /* Border */
+    --border: #CBD5E1;
+}
+
+/* Light mode overrides for JavaFX built-in controls */
+.root {
+    -fx-background-color: #F8FAFC;
+    -fx-base: #E2E8F0;
+    -fx-control-inner-background: #FFFFFF;
+    -fx-accent: #2563EB;
+    -fx-focus-color: #2563EB;
+    -fx-faint-focus-color: rgba(37, 99, 235, 0.1);
+    -fx-text-fill: #0F172A;
+}
+
+.label {
+    -fx-text-fill: #0F172A;
+}
+
+.text-field {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #0F172A;
+    -fx-prompt-text-fill: #94A3B8;
+}
+
+.combo-box {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #0F172A;
+}
+
+.combo-box .cell {
+    -fx-text-fill: #0F172A;
+}
+
+.list-cell {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #0F172A;
+}
+
+.list-cell:selected {
+    -fx-background-color: #2563EB;
+    -fx-text-fill: white;
+}
+
+.dialog-pane {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #CBD5E1;
+}
+
+.button {
+    -fx-text-fill: #0F172A;
+    -fx-background-color: #E2E8F0;
+    -fx-background-radius: 8;
+    -fx-border-width: 0;
+}
+
+.button:hover {
+    -fx-background-color: #CBD5E1;
+}
+
+.button:default {
+    -fx-background-color: #2563EB;
+    -fx-text-fill: white;
+}
+
+.check-box .label {
+    -fx-text-fill: #0F172A;
+}
+
+.hyperlink {
+    -fx-text-fill: #2563EB;
+}
+
+.split-pane {
+    -fx-background-color: #F8FAFC;
+}
+
+.split-pane-divider {
+    -fx-background-color: #CBD5E1;
+    -fx-padding: 0 1;
+}

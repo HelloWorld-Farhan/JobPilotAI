@@ -1,0 +1,42 @@
+# Build output
+target/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Maven
+*.class
+
+# Log files
+*.log
+
+# Temp
+*.tmp
+*.temp
+
+# Application data (generated at runtime)
+database/
+reports/
+logs/
+resume/
+settings/
+screenshots/
+temp/
+backup/

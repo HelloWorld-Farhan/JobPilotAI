@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.jobpilotai.controller.DashboardController"
+      styleClass="page-root" spacing="20">
+    <padding><Insets top="28" right="28" bottom="28" left="28"/></padding>
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="16">
+        <Label text="Dashboard" styleClass="page-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="dateTimeLabel" styleClass="datetime-label"/>
+    </HBox>
+
+    <!-- Stats Cards Row -->
+    <HBox spacing="16">
+        <!-- Applications Today -->
+        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+            <Label text="📤" style="-fx-font-size:24px;"/>
+            <Label text="Today" styleClass="stat-label"/>
+            <Label fx:id="statToday" text="0" styleClass="stat-value"/>
+        </VBox>
+        <!-- Successful -->
+        <VBox styleClass="stat-card stat-card-success" HBox.hgrow="ALWAYS">
+            <Label text="✅" style="-fx-font-size:24px;"/>
+            <Label text="Successful" styleClass="stat-label"/>
+            <Label fx:id="statSuccess" text="0" styleClass="stat-value stat-success"/>
+        </VBox>
+        <!-- Already Applied -->
+        <VBox styleClass="stat-card stat-card-info" HBox.hgrow="ALWAYS">
+            <Label text="🔵" style="-fx-font-size:24px;"/>
+            <Label text="Already Applied" styleClass="stat-label"/>
+            <Label fx:id="statAlreadyApplied" text="0" styleClass="stat-value stat-info"/>
+        </VBox>
+        <!-- Failed -->
+        <VBox styleClass="stat-card stat-card-danger" HBox.hgrow="ALWAYS">
+            <Label text="❌" style="-fx-font-size:24px;"/>
+            <Label text="Failed" styleClass="stat-label"/>
+            <Label fx:id="statFailed" text="0" styleClass="stat-value stat-danger"/>
+        </VBox>
+        <!-- Pending OTP -->
+        <VBox styleClass="stat-card stat-card-warning" HBox.hgrow="ALWAYS">
+            <Label text="🔑" style="-fx-font-size:24px;"/>
+            <Label text="Pending OTP" styleClass="stat-label"/>
+            <Label fx:id="statPendingOtp" text="0" styleClass="stat-value stat-warning"/>
+        </VBox>
+        <!-- Pending CAPTCHA -->
+        <VBox styleClass="stat-card stat-card-warning" HBox.hgrow="ALWAYS">
+            <Label text="🤖" style="-fx-font-size:24px;"/>
+            <Label text="Pending CAPTCHA" styleClass="stat-label"/>
+            <Label fx:id="statPendingCaptcha" text="0" styleClass="stat-value stat-warning"/>
+        </VBox>
+    </HBox>
+
+    <!-- Live Info Row -->
+    <HBox spacing="16" VBox.vgrow="ALWAYS">
+
+        <!-- Live Status Card -->
+        <VBox styleClass="info-card" spacing="16" HBox.hgrow="ALWAYS">
+            <Label text="Live Information" styleClass="card-title"/>
+            <GridPane hgap="12" vgap="10">
+                <Label text="Running Task:" styleClass="info-key"  GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <Label fx:id="runningTaskLabel"    text="Idle"    styleClass="info-value" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                <Label text="Current Website:"  styleClass="info-key" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <Label fx:id="currentWebsiteLabel" text="—"       styleClass="info-value" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                <Label text="Current Company:"  styleClass="info-key" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <Label fx:id="currentCompanyLabel" text="—"       styleClass="info-value" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                <Label text="Current Job:"      styleClass="info-key" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <Label fx:id="currentJobLabel"     text="—"       styleClass="info-value" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                <Label text="System Status:"    styleClass="info-key" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                <Label fx:id="systemStatusLabel" text="Ready"     styleClass="info-value info-value-success" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+            </GridPane>
+
+            <!-- Progress -->
+            <Label text="Progress" styleClass="info-key"/>
+            <ProgressBar fx:id="progressBar" progress="0.0" maxWidth="Infinity" styleClass="progress-bar-accent"/>
+        </VBox>
+
+        <!-- System Info Card -->
+        <VBox styleClass="info-card" spacing="12" prefWidth="280">
+            <Label text="System" styleClass="card-title"/>
+            <Label fx:id="appVersionLabel" text="JobPilotAI v1.0.0" styleClass="info-value"/>
+            <Separator/>
+            <Label text="Platform" styleClass="info-key"/>
+            <Label text="Windows 10 / 11" styleClass="info-value"/>
+            <Separator/>
+            <Label text="Database" styleClass="info-key"/>
+            <Label text="SQLite (Local)" styleClass="info-value"/>
+            <Separator/>
+            <Label text="Report Engine" styleClass="info-key"/>
+            <Label text="Apache POI 5.x" styleClass="info-value"/>
+        </VBox>
+    </HBox>
+
+</VBox>

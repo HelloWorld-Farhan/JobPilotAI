@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.jobpilotai.controller.ReportsController"
+      styleClass="page-root" spacing="16">
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="12">
+        <Label text="Reports" styleClass="page-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="totalLabel" text="Reports: 0" styleClass="count-badge"/>
+    </HBox>
+
+    <!-- Generate buttons -->
+    <HBox spacing="12" alignment="CENTER_LEFT" styleClass="toolbar">
+        <Button text="📄  Manual Report"  styleClass="btn-primary"   onAction="#onGenerateManual"/>
+        <Button text="⏱  Hourly Report"  styleClass="btn-secondary"  onAction="#onGenerateHourly"/>
+        <Button text="🏁  Final Report"   styleClass="btn-secondary"  onAction="#onGenerateFinal"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="📂  Open"   styleClass="btn-secondary" onAction="#onOpenSelected"/>
+        <Button text="🗑  Delete" styleClass="btn-danger"    onAction="#onDeleteSelected"/>
+        <Button text="🔄  Refresh" styleClass="btn-secondary" onAction="#onRefresh"/>
+    </HBox>
+
+    <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="colId"        text="ID"        prefWidth="50"/>
+            <TableColumn fx:id="colFilename"  text="File Name" prefWidth="320"/>
+            <TableColumn fx:id="colType"      text="Type"      prefWidth="100"/>
+            <TableColumn fx:id="colCreatedAt" text="Created"   prefWidth="180"/>
+        </columns>
+    </TableView>
+
+</VBox>

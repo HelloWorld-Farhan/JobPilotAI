@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.jobpilotai.controller.AboutController"
+      styleClass="page-root" spacing="0" alignment="CENTER">
+    <padding><Insets top="60" right="60" bottom="60" left="60"/></padding>
+
+    <VBox styleClass="about-card" alignment="CENTER" spacing="20" maxWidth="540">
+        <!-- Logo -->
+        <Label text="🚀" style="-fx-font-size: 64px;"/>
+
+        <Label fx:id="versionLabel" text="JobPilotAI v1.0.0" styleClass="about-title"/>
+        <Label text="Enterprise Job Application Tracker for Windows" styleClass="about-subtitle"/>
+
+        <Separator/>
+
+        <Label text="Built with Java 21 + JavaFX + SQLite + Apache POI" styleClass="about-tech"/>
+
+        <Separator/>
+
+        <Label fx:id="authorLabel" text="Built by JobPilotAI Team" styleClass="about-author"/>
+        <Hyperlink fx:id="githubLink" text="GitHub Repository" styleClass="about-link"/>
+
+        <Separator/>
+
+        <Label text="© 2026 Farhan Khalid. MIT License." styleClass="about-copyright"/>
+
+        <!-- Tech Badges Row -->
+        <HBox spacing="10" alignment="CENTER">
+            <Label text="Java 21"     styleClass="tech-badge"/>
+            <Label text="JavaFX"      styleClass="tech-badge"/>
+            <Label text="SQLite"      styleClass="tech-badge"/>
+            <Label text="Apache POI"  styleClass="tech-badge"/>
+            <Label text="Maven"       styleClass="tech-badge"/>
+        </HBox>
+    </VBox>
+
+</VBox>

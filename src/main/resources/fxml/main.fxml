@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.jobpilotai.controller.MainController"
+            fx:id="rootPane"
+            styleClass="root-pane"
+            minWidth="1280" minHeight="720"
+            prefWidth="1440" prefHeight="900">
+
+    <!-- ═══════════════════════════════ SIDEBAR ══════════════════════════════ -->
+    <left>
+        <VBox fx:id="sidebar" styleClass="sidebar" prefWidth="220" spacing="4">
+            <padding><Insets top="0" right="0" bottom="0" left="0"/></padding>
+
+            <!-- Logo / Branding -->
+            <VBox styleClass="sidebar-brand" alignment="CENTER" spacing="6">
+                <padding><Insets top="24" bottom="24"/></padding>
+                <Label text="🚀" style="-fx-font-size: 32px;"/>
+                <Label text="JobPilotAI" styleClass="brand-name"/>
+                <Label fx:id="versionLabel" text="v1.0.0" styleClass="brand-version"/>
+            </VBox>
+
+            <!-- Separator -->
+            <Separator styleClass="sidebar-separator"/>
+
+            <!-- Navigation -->
+            <VBox spacing="2" VBox.vgrow="ALWAYS">
+                <padding><Insets top="12" right="8" bottom="12" left="8"/></padding>
+
+                <Button fx:id="navDashboard"    text="📊  Dashboard"    styleClass="nav-btn,nav-btn-active" maxWidth="Infinity" onAction="#onDashboard"/>
+                <Button fx:id="navApplications" text="📋  Applications" styleClass="nav-btn" maxWidth="Infinity" onAction="#onApplications"/>
+                <Button fx:id="navHistory"       text="📁  History"      styleClass="nav-btn" maxWidth="Infinity" onAction="#onHistory"/>
+                <Button fx:id="navReports"       text="📈  Reports"      styleClass="nav-btn" maxWidth="Infinity" onAction="#onReports"/>
+                <Button fx:id="navSettings"      text="⚙️  Settings"     styleClass="nav-btn" maxWidth="Infinity" onAction="#onSettings"/>
+                <Button fx:id="navLogs"          text="📜  Logs"         styleClass="nav-btn" maxWidth="Infinity" onAction="#onLogs"/>
+                <Button fx:id="navAbout"         text="ℹ️  About"        styleClass="nav-btn" maxWidth="Infinity" onAction="#onAbout"/>
+            </VBox>
+
+            <!-- Bottom bar -->
+            <VBox styleClass="sidebar-footer" alignment="CENTER" spacing="4">
+                <padding><Insets top="12" bottom="16"/></padding>
+                <Separator styleClass="sidebar-separator"/>
+                <Label fx:id="clockLabel" text="00:00:00" styleClass="sidebar-clock"/>
+                <Button fx:id="sidebarToggleBtn" text="←" styleClass="toggle-btn" onAction="#onToggleSidebar"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- ═════════════════════════════ CONTENT AREA ═══════════════════════════ -->
+    <center>
+        <StackPane fx:id="contentArea" styleClass="content-area">
+            <!-- Views loaded dynamically by MainController -->
+        </StackPane>
+    </center>
+
+</BorderPane>

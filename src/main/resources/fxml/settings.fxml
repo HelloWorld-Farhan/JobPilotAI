@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.jobpilotai.controller.SettingsController"
+      styleClass="page-root" spacing="20">
+    <padding><Insets top="28" right="28" bottom="28" left="28"/></padding>
+
+    <Label text="Settings" styleClass="page-title"/>
+
+    <ScrollPane fitToWidth="true" styleClass="settings-scroll" VBox.vgrow="ALWAYS">
+        <VBox spacing="20" style="-fx-padding: 8 0 0 0;">
+
+            <!-- Paths -->
+            <VBox styleClass="settings-card" spacing="14">
+                <Label text="📁  File Paths" styleClass="settings-section-title"/>
+                <GridPane hgap="16" vgap="10">
+                    <Label text="Resume Path:" styleClass="settings-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <HBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="0" HBox.hgrow="ALWAYS">
+                        <TextField fx:id="tfResumePath" promptText="Path to your resume file…" HBox.hgrow="ALWAYS"/>
+                        <Button text="Browse…" styleClass="btn-secondary" onAction="#onBrowseResume"/>
+                    </HBox>
+                    <Label text="Report Folder:" styleClass="settings-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <HBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <TextField fx:id="tfReportFolder" promptText="Report output folder…" HBox.hgrow="ALWAYS"/>
+                        <Button text="Browse…" styleClass="btn-secondary" onAction="#onBrowseReportFolder"/>
+                    </HBox>
+                    <Label text="Log Folder:" styleClass="settings-label" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                    <HBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <TextField fx:id="tfLogFolder" promptText="Log output folder…" HBox.hgrow="ALWAYS"/>
+                        <Button text="Browse…" styleClass="btn-secondary" onAction="#onBrowseLogFolder"/>
+                    </HBox>
+                </GridPane>
+            </VBox>
+
+            <!-- Account & Email -->
+            <VBox styleClass="settings-card" spacing="14">
+                <Label text="📧  Account &amp; Email" styleClass="settings-section-title"/>
+                <GridPane hgap="16" vgap="10">
+                    <Label text="Default Email:" styleClass="settings-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <TextField fx:id="tfDefaultEmail" promptText="your@email.com" prefWidth="340" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    <Label text="GAS URL:" styleClass="settings-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <TextField fx:id="tfGasUrl" promptText="https://script.google.com/macros/s/…" prefWidth="340" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                </GridPane>
+            </VBox>
+
+            <!-- Appearance -->
+            <VBox styleClass="settings-card" spacing="14">
+                <Label text="🎨  Appearance" styleClass="settings-section-title"/>
+                <HBox spacing="24" alignment="CENTER_LEFT">
+                    <Label text="Theme:" styleClass="settings-label"/>
+                    <ComboBox fx:id="cbTheme" prefWidth="120"/>
+                    <CheckBox fx:id="chkDarkMode" text="Dark Mode" styleClass="settings-checkbox"/>
+                </HBox>
+            </VBox>
+
+            <!-- Behaviour -->
+            <VBox styleClass="settings-card" spacing="14">
+                <Label text="⚙️  Behaviour" styleClass="settings-section-title"/>
+                <VBox spacing="10">
+                    <CheckBox fx:id="chkNotifications" text="Enable Windows Notifications"   styleClass="settings-checkbox"/>
+                    <CheckBox fx:id="chkEmail"         text="Enable Email Notifications"     styleClass="settings-checkbox"/>
+                    <CheckBox fx:id="chkAutoSave"      text="Auto Save Session"              styleClass="settings-checkbox"/>
+                    <CheckBox fx:id="chkAutoReports"   text="Auto Generate Reports"          styleClass="settings-checkbox"/>
+                    <CheckBox fx:id="chkRememberSize"  text="Remember Window Size"           styleClass="settings-checkbox"/>
+                    <CheckBox fx:id="chkRememberPosition" text="Remember Window Position"    styleClass="settings-checkbox"/>
+                </VBox>
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+
+    <!-- Action Buttons -->
+    <HBox spacing="12" alignment="CENTER_RIGHT">
+        <Button text="Reset to Defaults" styleClass="btn-secondary" onAction="#onReset"/>
+        <Button text="💾  Save Settings" styleClass="btn-primary"   onAction="#onSave"/>
+    </HBox>
+
+</VBox>

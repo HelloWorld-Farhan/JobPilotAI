@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.jobpilotai.controller.ApplicationsController"
+      styleClass="page-root" spacing="16">
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="12">
+        <Label text="Applications" styleClass="page-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="totalLabel" text="Total: 0" styleClass="count-badge"/>
+    </HBox>
+
+    <!-- Toolbar -->
+    <HBox spacing="10" alignment="CENTER_LEFT" styleClass="toolbar">
+        <TextField fx:id="searchField" promptText="🔍  Search by company, title, notes…" prefWidth="280" styleClass="search-field"/>
+        <ComboBox fx:id="statusFilterCombo" prefWidth="160" styleClass="filter-combo"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="➕  Add" styleClass="btn-primary" onAction="#onAddApplication"/>
+        <Button text="✏️  Edit" styleClass="btn-secondary" onAction="#onEditSelected"/>
+        <Button text="🗑  Delete" styleClass="btn-danger" onAction="#onDeleteSelected"/>
+        <Button text="🗑  Delete All" styleClass="btn-danger" onAction="#onDeleteAll"/>
+        <Button text="📊  Export" styleClass="btn-secondary" onAction="#onExportExcel"/>
+        <Button text="🔄  Refresh" styleClass="btn-secondary" onAction="#onRefresh"/>
+    </HBox>
+
+    <!-- Table -->
+    <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="colId"       text="ID"       prefWidth="50"/>
+            <TableColumn fx:id="colCompany"  text="Company"  prefWidth="180"/>
+            <TableColumn fx:id="colJobTitle" text="Job Title" prefWidth="200"/>
+            <TableColumn fx:id="colWebsite"  text="Website"  prefWidth="160"/>
+            <TableColumn fx:id="colStatus"   text="Status"   prefWidth="150"/>
+            <TableColumn fx:id="colDate"     text="Date"     prefWidth="100"/>
+            <TableColumn fx:id="colTime"     text="Time"     prefWidth="80"/>
+            <TableColumn fx:id="colNotes"    text="Notes"    prefWidth="200"/>
+            <TableColumn fx:id="colAttempts" text="Attempts" prefWidth="70"/>
+        </columns>
+    </TableView>
+
+</VBox>
