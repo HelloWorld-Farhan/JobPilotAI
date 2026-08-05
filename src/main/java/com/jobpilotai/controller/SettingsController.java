@@ -135,8 +135,23 @@ public class SettingsController implements Initializable {
     }
 
     @FXML private void onSave() {
+        // If Dark Mode checkbox is checked, force theme to "dark" (and vice versa for "light") to keep them in sync
+        if (chkDarkMode.isSelected()) {
+            cbTheme.setValue("dark");
+            viewModel.themeProperty().set("dark");
+        } else {
+            cbTheme.setValue("light");
+            viewModel.themeProperty().set("light");
+        }
+
         viewModel.save();
         saveUserProfile();
+        
+        // Apply the theme live immediately
+        if (cbTheme.getScene() != null) {
+            com.jobpilotai.themes.ThemeEngine.applyTheme(cbTheme.getScene(), viewModel.themeProperty().get());
+        }
+        
         new Alert(Alert.AlertType.INFORMATION, "Settings & Profile saved successfully.", ButtonType.OK).showAndWait();
         AppLogger.info("Settings & Profile saved by user.");
     }
