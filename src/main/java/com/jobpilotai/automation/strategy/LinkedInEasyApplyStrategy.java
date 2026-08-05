@@ -40,29 +40,33 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
             
             while (System.currentTimeMillis() < maxWait) {
                 try {
-                    // Find any button with the class OR containing the text Easy Apply
-                    Locator buttons = page.locator("button.jobs-apply-button, button:has-text('Easy Apply')");
-                    int count = buttons.count();
+                    // Ultimate Fallback: Inject JavaScript directly into the browser to find and click the button.
+                    // This bypasses Playwright's locator engine entirely, avoiding all strict mode, visibility, and overlay bugs.
+                    Boolean jsClicked = (Boolean) page.evaluate(
+                        "() => {" +
+                        "  let elements = Array.from(document.querySelectorAll('button, a'));" +
+                        "  for (let el of elements) {" +
+                        "    let text = (el.innerText || '').toLowerCase().trim();" +
+                        "    let aria = (el.getAttribute('aria-label') || '').toLowerCase();" +
+                        "    let cls = (el.className || '').toLowerCase();" +
+                        "    if (text === 'easy apply' || aria.includes('easy apply') || cls.includes('jobs-apply-button')) {" +
+                        "      let style = window.getComputedStyle(el);" +
+                        "      if (el.offsetWidth > 0 && el.offsetHeight > 0 && style.visibility !== 'hidden') {" +
+                        "        el.click();" +
+                        "        return true;" +
+                        "      }" +
+                        "    }" +
+                        "  }" +
+                        "  return false;" +
+                        "}"
+                    );
                     
-                    for (int i = 0; i < count; i++) {
-                        Locator btn = buttons.nth(i);
-                        try {
-                            if (btn.isVisible()) {
-                                // Force click bypasses any overlapping elements (like cookie banners)
-                                btn.click(new com.microsoft.playwright.Locator.ClickOptions().setForce(true));
-                                clicked = true;
-                                break;
-                            }
-                        } catch (Exception e) {
-                            AppLogger.warn("Attempted to click a button but failed: " + e.getMessage());
-                        }
-                    }
-                    
-                    if (clicked) {
+                    if (jsClicked != null && jsClicked) {
+                        clicked = true;
                         break;
                     }
                 } catch (Exception e) {
-                    AppLogger.warn("Error finding buttons: " + e.getMessage());
+                    AppLogger.warn("Error evaluating JS for button: " + e.getMessage());
                 }
                 Thread.sleep(500); // Poll very fast
             }
