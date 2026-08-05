@@ -139,7 +139,12 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
             return false;
 
         } catch (Exception e) {
-            AppLogger.error("Error during LinkedIn Easy Apply flow.", e);
+            StringBuilder sb = new StringBuilder();
+            sb.append(e.getClass().getName()).append(": ").append(e.getMessage()).append("\n");
+            for (StackTraceElement el : e.getStackTrace()) {
+                sb.append("  at ").append(el.toString()).append("\n");
+            }
+            AppLogger.error("Error during LinkedIn Easy Apply flow. Details:\n" + sb.toString());
             return false;
         }
     }
