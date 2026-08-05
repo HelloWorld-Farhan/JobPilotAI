@@ -39,23 +39,32 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
             long maxWait = System.currentTimeMillis() + 180000;
             
             while (System.currentTimeMillis() < maxWait) {
-                // Find any button with the class OR containing the text Easy Apply
-                Locator buttons = page.locator("button.jobs-apply-button, button:has-text('Easy Apply')");
-                int count = buttons.count();
-                
-                for (int i = 0; i < count; i++) {
-                    Locator btn = buttons.nth(i);
-                    if (btn.isVisible()) {
-                        btn.click();
-                        clicked = true;
+                try {
+                    // Find any button with the class OR containing the text Easy Apply
+                    Locator buttons = page.locator("button.jobs-apply-button, button:has-text('Easy Apply')");
+                    int count = buttons.count();
+                    
+                    for (int i = 0; i < count; i++) {
+                        Locator btn = buttons.nth(i);
+                        try {
+                            if (btn.isVisible()) {
+                                // Force click bypasses any overlapping elements (like cookie banners)
+                                btn.click(new com.microsoft.playwright.Locator.ClickOptions().setForce(true));
+                                clicked = true;
+                                break;
+                            }
+                        } catch (Exception e) {
+                            AppLogger.warn("Attempted to click a button but failed: " + e.getMessage());
+                        }
+                    }
+                    
+                    if (clicked) {
                         break;
                     }
+                } catch (Exception e) {
+                    AppLogger.warn("Error finding buttons: " + e.getMessage());
                 }
-                
-                if (clicked) {
-                    break;
-                }
-                Thread.sleep(1000);
+                Thread.sleep(500); // Poll very fast
             }
             
             if (!clicked) {
