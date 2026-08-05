@@ -80,7 +80,7 @@ public class AiClient {
         }
 
         try {
-            String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + apiKey;
+            String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=" + apiKey;
             
             // Construct the JSON body for Gemini
             String requestBody = mapper.createObjectNode()
