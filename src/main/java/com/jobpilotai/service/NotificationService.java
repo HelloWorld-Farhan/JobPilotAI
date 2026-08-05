@@ -99,6 +99,7 @@ public class NotificationService {
 
                 HttpClient client = HttpClient.newBuilder()
                         .connectTimeout(Duration.ofSeconds(10))
+                        .followRedirects(HttpClient.Redirect.NORMAL)
                         .build();
 
                 HttpRequest request = HttpRequest.newBuilder()

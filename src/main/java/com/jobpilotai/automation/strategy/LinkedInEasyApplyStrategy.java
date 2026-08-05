@@ -15,7 +15,7 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
 
         try {
             // 1. Wait for and click the Easy Apply button
-            Locator easyApplyBtn = page.locator("button.jobs-apply-button");
+            Locator easyApplyBtn = page.locator("button.jobs-apply-button").first();
             
             String currentUrl = page.url().toLowerCase();
             if (currentUrl.contains("/login") || currentUrl.contains("/checkpoint") || currentUrl.contains("/auth/")) {
