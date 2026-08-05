@@ -46,6 +46,10 @@
     <HBox spacing="8" alignment="CENTER_LEFT" styleClass="toolbar"
           style="-fx-padding: 10 14;">
         <Label text="Job Queue" styleClass="card-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        
+        <TextField fx:id="tfJobUrl" promptText="Paste LinkedIn Job URL here..." prefWidth="350" styleClass="text-field"/>
+        <Button text="＋ Add Task" styleClass="btn-primary" onAction="#onAddJob"/>
     </HBox>
     
     <Region style="-fx-pref-height: 12; -fx-min-height: 12; -fx-max-height: 12;"/>

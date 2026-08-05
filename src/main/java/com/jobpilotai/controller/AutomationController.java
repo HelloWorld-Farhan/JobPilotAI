@@ -23,6 +23,7 @@ public class AutomationController implements Initializable {
     @FXML private Label statusLabel;
     @FXML private Label currentTaskLabel;
     @FXML private Label queueSizeLabel;
+    @FXML private javafx.scene.control.TextField tfJobUrl;
 
     @FXML private TableView<QueueItem> queueTable;
     @FXML private TableColumn<QueueItem, String> colCompany;
@@ -86,6 +87,22 @@ public class AutomationController implements Initializable {
     
     @FXML private void onClearQueue() {
         QueueService.getInstance().clearQueue();
+        refreshData();
+    }
+    
+    @FXML private void onAddJob() {
+        String url = tfJobUrl.getText();
+        if (url == null || url.trim().isEmpty()) {
+            com.jobpilotai.utils.DialogUtils.showAlert("Error", "Please paste a job URL first.");
+            return;
+        }
+        
+        String website = url.contains("linkedin.com") ? "LinkedIn" : 
+                        (url.contains("naukri.com") ? "Naukri" : 
+                        (url.contains("indeed.com") ? "Indeed" : "Other"));
+                        
+        QueueService.getInstance().addJob(website, "Unknown Company", "Manual Task", url.trim());
+        tfJobUrl.clear();
         refreshData();
     }
 }
