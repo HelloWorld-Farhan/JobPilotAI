@@ -20,10 +20,10 @@ public final class AppConfig {
     public static final String APP_AUTHOR  = "JobPilotAI Team";
 
     // ── Window Dimensions ───────────────────────────────────────────────────
-    public static final double MIN_WIDTH     = 1024;
-    public static final double MIN_HEIGHT    = 700;
-    public static final double DEFAULT_WIDTH = 1200;
-    public static final double DEFAULT_HEIGHT = 800;
+    public static final double MIN_WIDTH     = 900;
+    public static final double MIN_HEIGHT    = 600;
+    public static final double DEFAULT_WIDTH = 1024;
+    public static final double DEFAULT_HEIGHT = 700;
 
     // ── Database ─────────────────────────────────────────────────────────────
     public static final String DB_FILE_NAME = "jobpilotai.db";

@@ -18,7 +18,7 @@ public class DiskCache {
     private final Path cacheDir;
 
     public DiskCache(String cacheFolderName) {
-        this.cacheDir = Paths.get(PathConfig.getAppDir(), cacheFolderName);
+        this.cacheDir = Paths.get(PathConfig.APP_HOME.toString(), cacheFolderName);
         try {
             Files.createDirectories(cacheDir);
         } catch (IOException e) {
@@ -31,7 +31,7 @@ public class DiskCache {
             Path file = cacheDir.resolve(hashKey(key));
             Files.writeString(file, data);
         } catch (Exception e) {
-            AppLogger.warn("Failed to write to DiskCache", e);
+            AppLogger.error("Failed to write to DiskCache", e);
         }
     }
 
@@ -42,7 +42,7 @@ public class DiskCache {
                 return Files.readString(file);
             }
         } catch (Exception e) {
-            AppLogger.warn("Failed to read from DiskCache", e);
+            AppLogger.error("Failed to read from DiskCache", e);
         }
         return null;
     }
@@ -56,7 +56,7 @@ public class DiskCache {
                 }
             }
         } catch (Exception e) {
-            AppLogger.warn("Failed to clear DiskCache", e);
+            AppLogger.error("Failed to clear DiskCache", e);
         }
     }
 

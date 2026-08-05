@@ -158,7 +158,7 @@ public class MainApp extends Application {
 
         // Restore window position/size if the user has saved it, else center it
         SettingsService.getInstance().restoreWindowState(stage);
-        if (!SettingsService.getInstance().isRememberWindowPosition()) {
+        if (!SettingsService.getInstance().isRememberWindowPosition() || Double.isNaN(stage.getX())) {
             stage.centerOnScreen();
         }
 

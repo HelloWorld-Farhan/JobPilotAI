@@ -34,7 +34,7 @@ public class SettingsRepository {
                 return rs.next() ? rs.getString("value") : defaultValue;
             }
         } catch (SQLException e) {
-            AppLogger.error("SettingsRepository.get failed for key=" + key, e);
+            AppLogger.error("SettingsRepository.get failed for key=" + key + ": " + e.getMessage(), e);
             return defaultValue;
         }
     }
@@ -52,7 +52,7 @@ public class SettingsRepository {
             ps.setString(2, value);
             ps.executeUpdate();
         } catch (SQLException e) {
-            AppLogger.error("SettingsRepository.set failed for key=" + key, e);
+            AppLogger.error("SettingsRepository.set failed for key=" + key + ": " + e.getMessage(), e);
         }
     }
 
@@ -65,7 +65,7 @@ public class SettingsRepository {
                 map.put(rs.getString("key"), rs.getString("value"));
             }
         } catch (SQLException e) {
-            AppLogger.error("SettingsRepository.loadAll failed.", e);
+            AppLogger.error("SettingsRepository.loadAll failed: " + e.getMessage(), e);
         }
         return map;
     }
