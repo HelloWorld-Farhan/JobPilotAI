@@ -113,6 +113,22 @@ public class AiClient {
                 }
             } else {
                 AppLogger.error("Gemini API returned error: " + response.statusCode() + " - " + response.body());
+                try {
+                    JsonNode errorNode = mapper.readTree(response.body()).path("error");
+                    if (!errorNode.isMissingNode()) {
+                        String errMsg = errorNode.path("message").asText();
+                        if (prompt.contains("JSON format")) {
+                            return "{ \"error\": \"API Error (" + response.statusCode() + "): " + errMsg + "\" }";
+                        }
+                        return "API Error (" + response.statusCode() + "): " + errMsg;
+                    }
+                } catch (Exception parseEx) {
+                    // Ignore parse errors on the error response itself
+                }
+                if (prompt.contains("JSON format")) {
+                    return "{ \"error\": \"Gemini API failed with status " + response.statusCode() + "\" }";
+                }
+                return "Gemini API failed with status " + response.statusCode();
             }
 
         } catch (Exception e) {
