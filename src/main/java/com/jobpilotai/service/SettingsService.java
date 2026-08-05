@@ -37,7 +37,6 @@ public class SettingsService {
     private boolean headlessMode;
     private boolean screenshotOnError;
     private int timeoutMs;
-    private int timeoutMs;
     private int maxRetries;
     
     // Auto-Fill Profile
