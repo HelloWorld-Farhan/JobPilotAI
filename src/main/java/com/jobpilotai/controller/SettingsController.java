@@ -135,13 +135,18 @@ public class SettingsController implements Initializable {
     }
 
     @FXML private void onSave() {
-        // If Dark Mode checkbox is checked, force theme to "dark" (and vice versa for "light") to keep them in sync
-        if (chkDarkMode.isSelected()) {
-            cbTheme.setValue("dark");
-            viewModel.themeProperty().set("dark");
-        } else {
-            cbTheme.setValue("light");
-            viewModel.themeProperty().set("light");
+        // Only override if the theme is strictly "dark" or "light" (legacy support)
+        // If they pick "ocean", we shouldn't force it to dark/light based on the checkbox.
+        // Actually, just let the combobox dictate the theme.
+        if (cbTheme.getValue() != null) {
+            viewModel.themeProperty().set(cbTheme.getValue());
+            if (cbTheme.getValue().equalsIgnoreCase("dark")) {
+                viewModel.darkModeProperty().set(true);
+                chkDarkMode.setSelected(true);
+            } else if (cbTheme.getValue().equalsIgnoreCase("light")) {
+                viewModel.darkModeProperty().set(false);
+                chkDarkMode.setSelected(false);
+            }
         }
 
         viewModel.save();

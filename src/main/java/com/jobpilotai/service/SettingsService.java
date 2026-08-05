@@ -114,6 +114,12 @@ public class SettingsService {
         if (rememberWindowSize) {
             double w = doubleSetting(AppConfig.SETTING_WINDOW_W, AppConfig.DEFAULT_WIDTH);
             double h = doubleSetting(AppConfig.SETTING_WINDOW_H, AppConfig.DEFAULT_HEIGHT);
+            
+            // Clamp to screen size so we don't restore a massive window on a small screen
+            javafx.geometry.Rectangle2D bounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+            w = Math.min(w, bounds.getWidth() * 0.95);
+            h = Math.min(h, bounds.getHeight() * 0.95);
+            
             stage.setWidth(Math.max(w, AppConfig.MIN_WIDTH));
             stage.setHeight(Math.max(h, AppConfig.MIN_HEIGHT));
         }
