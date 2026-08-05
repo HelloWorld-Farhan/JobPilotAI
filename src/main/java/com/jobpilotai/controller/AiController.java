@@ -54,6 +54,12 @@ public class AiController implements Initializable {
         tfJobTitle.textProperty().addListener((obs, oldV, newV) -> prefs.put("ai_job_title", newV));
         tfCompany.textProperty().addListener((obs, oldV, newV) -> prefs.put("ai_company", newV));
         taJobInput.textProperty().addListener((obs, oldV, newV) -> prefs.put("ai_job_desc", newV));
+        
+        // Load globally persisted parsed JSON
+        String savedJson = com.jobpilotai.service.SettingsService.getInstance().getParsedResumeJson();
+        if (savedJson != null && !savedJson.trim().isEmpty()) {
+            taResumeOutput.setText(formatJson(savedJson));
+        }
     }
 
     @FXML private void onBrowseResume() {
