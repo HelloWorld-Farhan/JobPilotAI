@@ -140,7 +140,7 @@
             <VBox styleClass="settings-card" spacing="16">
                 <HBox alignment="CENTER_LEFT" spacing="10">
                     <Label text="🤖" style="-fx-font-size: 16px;"/>
-                    <Label text="AI Intelligence" styleClass="settings-section-title"/>
+                    <Label text="AI Intelligence (Round-Robin Fallback)" styleClass="settings-section-title"/>
                 </HBox>
                 <Separator style="-fx-opacity: 0.4;"/>
 
@@ -148,9 +148,18 @@
                     <Label text="Enable AI Features" styleClass="settings-label" minWidth="130"/>
                     <CheckBox fx:id="chkAiEnabled"/>
                 </HBox>
-                <HBox alignment="CENTER_LEFT" spacing="12">
-                    <Label text="Gemini API Key" styleClass="settings-label" minWidth="130"/>
-                    <TextField fx:id="tfGeminiApiKey" promptText="AIzaSy…" HBox.hgrow="ALWAYS"/>
+                
+                <Label text="Paste your API keys below (one key per line). The bot will automatically rotate to the next key if one fails." styleClass="settings-hint"/>
+                
+                <HBox spacing="20">
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Label text="Gemini API Keys" styleClass="settings-label"/>
+                        <TextArea fx:id="taGeminiApiKeys" promptText="AIzaSy...&#10;AIzaSy..." prefHeight="100"/>
+                    </VBox>
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Label text="Groq API Keys" styleClass="settings-label"/>
+                        <TextArea fx:id="taGroqApiKeys" promptText="gsk_...&#10;gsk_..." prefHeight="100"/>
+                    </VBox>
                 </HBox>
             </VBox>
 

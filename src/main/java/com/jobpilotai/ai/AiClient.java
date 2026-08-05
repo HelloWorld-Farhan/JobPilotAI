@@ -41,7 +41,7 @@ public class AiClient {
         String prompt = "Extract the following details from this resume text into JSON format: " +
                 "name, email, skills (comma separated), education, experience, projects, certifications. " +
                 "Return ONLY valid JSON.\n\nResume Text:\n" + rawText;
-        return callGemini(prompt);
+        return callAi(prompt);
     }
 
     /**
@@ -51,7 +51,7 @@ public class AiClient {
         String prompt = "Extract the following from this job description into JSON format: " +
                 "jobTitle, company, requiredSkills, preferredSkills, education, experience. " +
                 "Return ONLY valid JSON.\n\nJob Description:\n" + rawText;
-        return callGemini(prompt);
+        return callAi(prompt);
     }
 
     /**
@@ -63,21 +63,71 @@ public class AiClient {
                 "Applicant Profile: " + profileData + "\n" +
                 "Resume: " + resumeData + "\n" +
                 "Job Description: " + jobData;
-        return callGemini(prompt);
+        return callAi(prompt);
+    }
+
+    private int currentGeminiIndex = 0;
+    private int currentGroqIndex = 0;
+
+    /**
+     * Tries Gemini keys in round-robin, then Groq keys in round-robin.
+     */
+    private String callAi(String prompt) {
+        SettingsService settings = SettingsService.getInstance();
+        if (!settings.isAiEnabled()) {
+            AppLogger.warn("AI is disabled. Returning offline fallback.");
+            return offlineFallback(prompt);
+        }
+
+        String geminiRaw = settings.getGeminiApiKeys();
+        String groqRaw = settings.getGroqApiKeys();
+        
+        String[] geminiKeys = geminiRaw != null && !geminiRaw.trim().isEmpty() ? geminiRaw.split("\\r?\\n") : new String[0];
+        String[] groqKeys = groqRaw != null && !groqRaw.trim().isEmpty() ? groqRaw.split("\\r?\\n") : new String[0];
+
+        if (geminiKeys.length == 0 && groqKeys.length == 0) {
+            AppLogger.warn("No AI keys configured. Returning offline fallback.");
+            return offlineFallback(prompt);
+        }
+
+        // Try Gemini keys
+        for (int i = 0; i < geminiKeys.length; i++) {
+            if (currentGeminiIndex >= geminiKeys.length) currentGeminiIndex = 0;
+            String key = geminiKeys[currentGeminiIndex].trim();
+            if (!key.isEmpty()) {
+                AppLogger.info("Trying Gemini API key (index " + currentGeminiIndex + ")");
+                String result = callGeminiInternal(prompt, key);
+                if (result != null && !result.startsWith("API Error")) {
+                    return result;
+                }
+                AppLogger.warn("Gemini key " + currentGeminiIndex + " failed. Rotating...");
+            }
+            currentGeminiIndex++;
+        }
+
+        // Try Groq keys
+        for (int i = 0; i < groqKeys.length; i++) {
+            if (currentGroqIndex >= groqKeys.length) currentGroqIndex = 0;
+            String key = groqKeys[currentGroqIndex].trim();
+            if (!key.isEmpty()) {
+                AppLogger.info("Trying Groq API key (index " + currentGroqIndex + ")");
+                String result = callGroqInternal(prompt, key);
+                if (result != null && !result.startsWith("API Error")) {
+                    return result;
+                }
+                AppLogger.warn("Groq key " + currentGroqIndex + " failed. Rotating...");
+            }
+            currentGroqIndex++;
+        }
+
+        AppLogger.error("All AI API keys failed (Gemini and Groq). Returning fallback.");
+        return offlineFallback(prompt);
     }
 
     /**
      * Internal generic call to Google Gemini REST API.
      */
-    private String callGemini(String prompt) {
-        SettingsService settings = SettingsService.getInstance();
-        
-        // If AI is disabled or key is missing, return fallback heuristics string.
-        String apiKey = settings.getGeminiApiKey();
-        if (!settings.isAiEnabled() || apiKey == null || apiKey.trim().isEmpty()) {
-            AppLogger.warn("AI is disabled or API key missing. Returning offline heuristic fallback.");
-            return offlineFallback(prompt);
-        }
+    private String callGeminiInternal(String prompt, String apiKey) {
 
         try {
             String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=" + apiKey;
@@ -134,8 +184,48 @@ public class AiClient {
         } catch (Exception e) {
             AppLogger.error("Failed to call Gemini API", e);
         }
+        return "API Error: Unknown failure";
+    }
 
-        return offlineFallback(prompt);
+    /**
+     * Internal generic call to Groq REST API.
+     */
+    private String callGroqInternal(String prompt, String apiKey) {
+        try {
+            String url = "https://api.groq.com/openai/v1/chat/completions";
+            String requestBody = mapper.createObjectNode()
+                .put("model", "llama3-8b-8192")
+                .set("messages", mapper.createArrayNode()
+                    .add(mapper.createObjectNode()
+                        .put("role", "user")
+                        .put("content", prompt)
+                    )
+                ).toString();
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("Authorization", "Bearer " + apiKey)
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                JsonNode root = mapper.readTree(response.body());
+                JsonNode choices = root.path("choices");
+                if (choices.isArray() && choices.size() > 0) {
+                    String result = choices.get(0).path("message").path("content").asText();
+                    return result.replaceAll("```json\\s*", "").replaceAll("```\\s*", "").trim();
+                }
+            } else {
+                AppLogger.error("Groq API returned error: " + response.statusCode() + " - " + response.body());
+                return "API Error (" + response.statusCode() + ")";
+            }
+        } catch (Exception e) {
+            AppLogger.error("Failed to call Groq API", e);
+        }
+        return "API Error: Unknown failure";
     }
 
     public String extractJobSearchUrl(String resumeJson) {
@@ -145,7 +235,7 @@ public class AiClient {
                         "Return ONLY the raw URL string starting with https://www.linkedin.com/jobs/search/?keywords= . Do not include markdown, explanation, or quotes.\n\n" +
                         "Resume JSON:\n" + resumeJson;
                         
-        String result = callGemini(prompt);
+        String result = callAi(prompt);
         if (result != null) {
             return result.trim().replace("\"", "");
         }

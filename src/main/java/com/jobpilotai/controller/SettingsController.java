@@ -57,7 +57,8 @@ public class SettingsController implements Initializable {
     
     // AI
     @FXML private CheckBox     chkAiEnabled;
-    @FXML private TextField    tfGeminiApiKey;
+    @FXML private TextArea     taGeminiApiKeys;
+    @FXML private TextArea     taGroqApiKeys;
 
     private final SettingsViewModel viewModel = new SettingsViewModel();
     private UserProfile currentProfile;
@@ -95,7 +96,8 @@ public class SettingsController implements Initializable {
         tfRetries          .textProperty().bindBidirectional(viewModel.maxRetriesProperty());
         
         chkAiEnabled       .selectedProperty().bindBidirectional(viewModel.aiEnabledProperty());
-        tfGeminiApiKey     .textProperty().bindBidirectional(viewModel.geminiApiKeyProperty());
+        taGeminiApiKeys    .textProperty().bindBidirectional(viewModel.geminiApiKeysProperty());
+        taGroqApiKeys      .textProperty().bindBidirectional(viewModel.groqApiKeysProperty());
         
         tfCurrentSalary    .textProperty().bindBidirectional(viewModel.currentSalaryProperty());
         tfExpectedSalary   .textProperty().bindBidirectional(viewModel.expectedSalaryProperty());
@@ -193,7 +195,8 @@ public class SettingsController implements Initializable {
             viewModel.maxRetriesProperty()       .set("3");
             
             viewModel.aiEnabledProperty()        .set(false);
-            viewModel.geminiApiKeyProperty()     .set("");
+            viewModel.geminiApiKeysProperty()    .set("");
+            viewModel.groqApiKeysProperty()      .set("");
             
             viewModel.save();
         }

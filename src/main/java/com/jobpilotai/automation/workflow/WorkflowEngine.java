@@ -161,13 +161,13 @@ public class WorkflowEngine {
     }
 
     private void logHistory(QueueItem task, String status, String reason) {
-        String sql = "INSERT INTO workflow_history (task_id, website, company, job_title, status, reason) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO applications (company, job_title, website, job_url, status, date, time, notes) VALUES (?, ?, ?, ?, ?, date('now'), time('now'), ?)";
         try (Connection conn = DatabaseManager.getInstance().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, task.getId());
-            pstmt.setString(2, task.getWebsite());
-            pstmt.setString(3, task.getCompany());
-            pstmt.setString(4, task.getJobTitle());
+            pstmt.setString(1, task.getCompany());
+            pstmt.setString(2, task.getJobTitle());
+            pstmt.setString(3, task.getWebsite());
+            pstmt.setString(4, task.getJobUrl());
             pstmt.setString(5, status);
             pstmt.setString(6, reason);
             pstmt.executeUpdate();

@@ -26,7 +26,8 @@ public class SettingsViewModel {
     private final StringProperty  timeoutMs            = new SimpleStringProperty();
     private final StringProperty  maxRetries           = new SimpleStringProperty();
     
-    private final StringProperty  geminiApiKey         = new SimpleStringProperty();
+    private final StringProperty  geminiApiKeys        = new SimpleStringProperty();
+    private final StringProperty  groqApiKeys          = new SimpleStringProperty();
     private final BooleanProperty aiEnabled            = new SimpleBooleanProperty();
 
     private final StringProperty  currentSalary        = new SimpleStringProperty();
@@ -57,7 +58,8 @@ public class SettingsViewModel {
         timeoutMs              .set(String.valueOf(service.getTimeoutMs()));
         maxRetries             .set(String.valueOf(service.getMaxRetries()));
         
-        geminiApiKey           .set(service.getGeminiApiKey());
+        geminiApiKeys          .set(service.getGeminiApiKeys());
+        groqApiKeys            .set(service.getGroqApiKeys());
         aiEnabled              .set(service.isAiEnabled());
         
         currentSalary          .set(service.getCurrentSalary());
@@ -92,7 +94,8 @@ public class SettingsViewModel {
             service.setMaxRetries(Integer.parseInt(maxRetries.get()));
         } catch (NumberFormatException ignored) {}
         
-        service.setGeminiApiKey         (geminiApiKey.get());
+        service.setGeminiApiKeys        (geminiApiKeys.get());
+        service.setGroqApiKeys          (groqApiKeys.get());
         service.setAiEnabled            (aiEnabled.get());
         
         service.setCurrentSalary        (currentSalary.get());
@@ -124,7 +127,8 @@ public class SettingsViewModel {
     public StringProperty  timeoutMsProperty()              { return timeoutMs; }
     public StringProperty  maxRetriesProperty()             { return maxRetries; }
     
-    public StringProperty  geminiApiKeyProperty()           { return geminiApiKey; }
+    public StringProperty  geminiApiKeysProperty()          { return geminiApiKeys; }
+    public StringProperty  groqApiKeysProperty()            { return groqApiKeys; }
     public BooleanProperty aiEnabledProperty()              { return aiEnabled; }
     
     public StringProperty  currentSalaryProperty()          { return currentSalary; }

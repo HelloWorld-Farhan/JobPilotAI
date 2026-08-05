@@ -9,8 +9,16 @@ import java.util.List;
 
 public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
 
+    private void updateStatus(String statusMsg) {
+        com.jobpilotai.model.QueueItem currentTask = com.jobpilotai.automation.workflow.WorkflowEngine.getInstance().getCurrentTask();
+        if (currentTask != null) {
+            com.jobpilotai.automation.queue.QueueService.getInstance().updateStatus(currentTask.getId(), statusMsg);
+        }
+    }
+
     @Override
     public boolean apply(Page page, String url) throws Exception {
+        updateStatus("Navigating to Job Page...");
         AppLogger.info("Attempting LinkedIn Easy Apply for: " + url);
 
         try {
@@ -20,6 +28,7 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
                 com.jobpilotai.service.NotificationService.getInstance().notify("JobPilotAI: Security Challenge", 
                     "Automation is paused. Please complete the login or 2FA challenge on LinkedIn.");
                 
+                updateStatus("Waiting for 2FA / Login...");
                 AppLogger.info("Waiting for you to complete login/2FA. Automation will resume instantly once done...");
                 long maxWaitTime = System.currentTimeMillis() + 180000;
                 while (System.currentTimeMillis() < maxWaitTime) {
@@ -34,6 +43,7 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
                 }
             }
             
+            updateStatus("Looking for Easy Apply button...");
             AppLogger.info("Waiting for the Easy Apply button. You have 3 minutes.");
             boolean clicked = false;
             long maxWait = System.currentTimeMillis() + 180000;
@@ -57,6 +67,7 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
                 return false;
             }
             
+            updateStatus("Navigating Easy Apply Modal...");
             AppLogger.info("Clicked Easy Apply button.");
             
             // 2. Step through the modal
@@ -67,6 +78,7 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
                 // Check for Submit button first
                 Locator submitBtn = page.locator("button[aria-label='Submit application']");
                 if (submitBtn.count() > 0 && submitBtn.first().isVisible()) {
+                    updateStatus("Submitting Application...");
                     submitBtn.first().click();
                     AppLogger.info("Clicked Submit Application!");
                     // Wait for the success modal
@@ -80,6 +92,7 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
                 // Check for Review button
                 Locator reviewBtn = page.locator("button[aria-label='Review your application']");
                 if (reviewBtn.count() > 0 && reviewBtn.first().isVisible()) {
+                    updateStatus("Reviewing Application...");
                     reviewBtn.first().click();
                     AppLogger.info("Clicked Review button.");
                     continue;
@@ -88,6 +101,7 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
                 // Check for Next button
                 Locator nextBtn = page.locator("button[aria-label='Continue to next step']");
                 if (nextBtn.count() > 0 && nextBtn.first().isVisible()) {
+                    updateStatus("Proceeding to Next Step...");
                     nextBtn.first().click();
                     AppLogger.info("Clicked Next button.");
                     continue;

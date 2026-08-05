@@ -30,7 +30,8 @@ public class SettingsService {
     private boolean rememberWindowPosition;
     
     // AI Settings
-    private String geminiApiKey;
+    private String geminiApiKeys;
+    private String groqApiKeys;
     private boolean aiEnabled;
     
     // Automation
@@ -79,7 +80,8 @@ public class SettingsService {
         timeoutMs            = intSetting(AppConfig.SETTING_TIMEOUT, AppConfig.DEFAULT_TIMEOUT);
         maxRetries           = intSetting(AppConfig.SETTING_MAX_RETRIES, AppConfig.DEFAULT_MAX_RETRIES);
         
-        geminiApiKey         = EncryptionService.decrypt(repo.get(AppConfig.SETTING_GEMINI_API_KEY, ""));
+        geminiApiKeys        = EncryptionService.decrypt(repo.get(AppConfig.SETTING_GEMINI_API_KEY, ""));
+        groqApiKeys          = EncryptionService.decrypt(repo.get("SETTING_GROQ_API_KEYS", ""));
         aiEnabled            = bool(repo.get(AppConfig.SETTING_AI_ENABLED, String.valueOf(AppConfig.DEFAULT_AI_ENABLED)));
 
         currentSalary        = repo.get(AppConfig.SETTING_CURRENT_SALARY, "");
@@ -115,7 +117,8 @@ public class SettingsService {
         repo.set(AppConfig.SETTING_TIMEOUT,        String.valueOf(timeoutMs));
         repo.set(AppConfig.SETTING_MAX_RETRIES,    String.valueOf(maxRetries));
         
-        repo.set(AppConfig.SETTING_GEMINI_API_KEY, EncryptionService.encrypt(geminiApiKey));
+        repo.set(AppConfig.SETTING_GEMINI_API_KEY, EncryptionService.encrypt(geminiApiKeys != null ? geminiApiKeys : ""));
+        repo.set("SETTING_GROQ_API_KEYS",          EncryptionService.encrypt(groqApiKeys != null ? groqApiKeys : ""));
         repo.set(AppConfig.SETTING_AI_ENABLED,     String.valueOf(aiEnabled));
 
         repo.set(AppConfig.SETTING_CURRENT_SALARY, currentSalary);
@@ -216,8 +219,10 @@ public class SettingsService {
     public int getMaxRetries() { return maxRetries; }
     public void setMaxRetries(int maxRetries) { this.maxRetries = maxRetries; }
     
-    public String getGeminiApiKey() { return geminiApiKey; }
-    public void setGeminiApiKey(String key) { this.geminiApiKey = key; }
+    public String getGeminiApiKeys() { return geminiApiKeys; }
+    public void setGeminiApiKeys(String keys) { this.geminiApiKeys = keys; }
+    public String getGroqApiKeys() { return groqApiKeys; }
+    public void setGroqApiKeys(String keys) { this.groqApiKeys = keys; }
     public boolean isAiEnabled() { return aiEnabled; }
     public void setAiEnabled(boolean enabled) { this.aiEnabled = enabled; }
     
