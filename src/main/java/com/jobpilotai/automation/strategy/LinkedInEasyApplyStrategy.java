@@ -85,8 +85,8 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
                 
                 // Check for Submit button first
                 Locator submitBtn = page.locator("button[aria-label='Submit application']");
-                if (submitBtn.count() > 0 && submitBtn.isVisible()) {
-                    submitBtn.click();
+                if (submitBtn.count() > 0 && submitBtn.first().isVisible()) {
+                    submitBtn.first().click();
                     AppLogger.info("Clicked Submit Application!");
                     // Wait for the success modal
                     Thread.sleep(3000);
@@ -98,16 +98,16 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
                 
                 // Check for Review button
                 Locator reviewBtn = page.locator("button[aria-label='Review your application']");
-                if (reviewBtn.count() > 0 && reviewBtn.isVisible()) {
-                    reviewBtn.click();
+                if (reviewBtn.count() > 0 && reviewBtn.first().isVisible()) {
+                    reviewBtn.first().click();
                     AppLogger.info("Clicked Review button.");
                     continue;
                 }
                 
                 // Check for Next button
                 Locator nextBtn = page.locator("button[aria-label='Continue to next step']");
-                if (nextBtn.count() > 0 && nextBtn.isVisible()) {
-                    nextBtn.click();
+                if (nextBtn.count() > 0 && nextBtn.first().isVisible()) {
+                    nextBtn.first().click();
                     AppLogger.info("Clicked Next button.");
                     continue;
                 }
@@ -115,15 +115,15 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
                 // If we get here and none of the buttons are found or visible, we might be stuck
                 // Look for generic primary buttons in the modal footer
                 Locator genericPrimary = page.locator(".artdeco-modal__actionbar .artdeco-button--primary");
-                if (genericPrimary.count() > 0 && genericPrimary.isVisible()) {
+                if (genericPrimary.count() > 0 && genericPrimary.first().isVisible()) {
                     // Check if it's disabled (means a required field is empty)
-                    boolean isDisabled = (boolean) genericPrimary.evaluate("el => el.disabled");
+                    boolean isDisabled = (boolean) genericPrimary.first().evaluate("el => el.disabled");
                     if (isDisabled) {
                         AppLogger.warn("Primary button is disabled. Stuck on a required field.");
                         return false;
                     }
                     
-                    genericPrimary.click();
+                    genericPrimary.first().click();
                     AppLogger.info("Clicked generic primary button.");
                     continue;
                 }
