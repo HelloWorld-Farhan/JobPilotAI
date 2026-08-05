@@ -48,8 +48,7 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
                         "  for (let el of elements) {" +
                         "    let text = (el.innerText || '').toLowerCase().trim();" +
                         "    let aria = (el.getAttribute('aria-label') || '').toLowerCase();" +
-                        "    let cls = (el.className || '').toLowerCase();" +
-                        "    if (text === 'easy apply' || aria.includes('easy apply') || cls.includes('jobs-apply-button')) {" +
+                        "    if (text.includes('easy apply') || aria.includes('easy apply')) {" +
                         "      let style = window.getComputedStyle(el);" +
                         "      if (el.offsetWidth > 0 && el.offsetHeight > 0 && style.visibility !== 'hidden') {" +
                         "        el.click();" +
