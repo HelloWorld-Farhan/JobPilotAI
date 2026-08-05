@@ -87,7 +87,14 @@ public class NotificationService {
         // Fire-and-forget on a background thread
         Thread.ofVirtual().start(() -> {
             try {
-                String payload = "{\"subject\":\"" + escape(subject) +
+                String defaultEmail = SettingsService.getInstance().getDefaultEmail();
+                if (defaultEmail == null || defaultEmail.isBlank()) {
+                    AppLogger.warn("Default Email not set in settings. Email skipped.");
+                    return;
+                }
+                
+                String payload = "{\"type\":\"alert\",\"to_email\":\"" + escape(defaultEmail) + 
+                        "\",\"subject\":\"" + escape(subject) +
                         "\",\"body\":\"" + escape(body) + "\"}";
 
                 HttpClient client = HttpClient.newBuilder()
