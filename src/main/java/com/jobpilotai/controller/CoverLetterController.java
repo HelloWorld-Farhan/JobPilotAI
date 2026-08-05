@@ -8,10 +8,7 @@ import com.jobpilotai.service.UserProfileService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -22,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
+import java.util.prefs.Preferences;
 
 public class CoverLetterController implements Initializable {
 
@@ -32,11 +30,26 @@ public class CoverLetterController implements Initializable {
     
     private String latestResumeJson = "";
     private UserProfile profile;
+    private Preferences prefs;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         profile = UserProfileService.getInstance().loadProfile();
         loadLatestResumeData();
+        
+        prefs = Preferences.userNodeForPackage(CoverLetterController.class);
+        
+        // Load saved values
+        tfJobTitle.setText(prefs.get("cl_job_title", ""));
+        tfCompany.setText(prefs.get("cl_company", ""));
+        taJobDescription.setText(prefs.get("cl_job_desc", ""));
+        taCoverLetter.setText(prefs.get("cl_output", ""));
+        
+        // Auto-save on change
+        tfJobTitle.textProperty().addListener((obs, oldV, newV) -> prefs.put("cl_job_title", newV));
+        tfCompany.textProperty().addListener((obs, oldV, newV) -> prefs.put("cl_company", newV));
+        taJobDescription.textProperty().addListener((obs, oldV, newV) -> prefs.put("cl_job_desc", newV));
+        taCoverLetter.textProperty().addListener((obs, oldV, newV) -> prefs.put("cl_output", newV));
     }
 
     private void loadLatestResumeData() {

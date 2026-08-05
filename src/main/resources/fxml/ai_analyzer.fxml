@@ -25,7 +25,10 @@
                 <Label text="Upload Resume for AI Parsing" style="-fx-text-fill: #b3b3b3; -fx-font-size: 14px;"/>
                 
                 <HBox spacing="10">
-                    <TextField fx:id="tfSelectedResume" editable="false" promptText="Select PDF, DOCX, TXT, or TEX..." HBox.hgrow="ALWAYS" style="-fx-background-color: #333333; -fx-text-fill: white; -fx-border-color: #444444; -fx-border-radius: 4; -fx-padding: 8;"/>
+                    <VBox HBox.hgrow="ALWAYS" spacing="2">
+                        <TextField fx:id="tfSelectedResume" editable="false" promptText="Select PDF, DOCX, TXT, or TEX..." style="-fx-background-color: #333333; -fx-text-fill: white; -fx-border-color: #444444; -fx-border-radius: 4; -fx-padding: 8;"/>
+                        <Label text="This resume will be parsed and saved to the database. JobPilotAI will use it later for generating cover letters automatically." style="-fx-text-fill: #94A3B8; -fx-font-size: 11px; -fx-padding: 2 0 0 4;"/>
+                    </VBox>
                     <Button text="Browse" onAction="#onBrowseResume" style="-fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15 8 15; -fx-background-radius: 4;"/>
                     <Button text="Analyze Resume" onAction="#onAnalyzeResume" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15 8 15; -fx-background-radius: 4;"/>
                 </HBox>
@@ -46,15 +49,18 @@
                     <VBox spacing="5" HBox.hgrow="ALWAYS">
                         <Label text="Job Title" style="-fx-text-fill: #b3b3b3;"/>
                         <TextField fx:id="tfJobTitle" promptText="e.g. Senior Java Engineer" style="-fx-background-color: #333333; -fx-text-fill: white; -fx-padding: 8;"/>
+                        <Label text="Used to identify the role in your history." style="-fx-text-fill: #94A3B8; -fx-font-size: 11px;"/>
                     </VBox>
                     <VBox spacing="5" HBox.hgrow="ALWAYS">
                         <Label text="Company" style="-fx-text-fill: #b3b3b3;"/>
                         <TextField fx:id="tfCompany" promptText="e.g. Google" style="-fx-background-color: #333333; -fx-text-fill: white; -fx-padding: 8;"/>
+                        <Label text="Used to track application status." style="-fx-text-fill: #94A3B8; -fx-font-size: 11px;"/>
                     </VBox>
                 </HBox>
                 
                 <Label text="Paste Job Description" style="-fx-text-fill: #b3b3b3;"/>
                 <TextArea fx:id="taJobInput" promptText="Paste full JD here..." wrapText="true" prefHeight="150" style="-fx-control-inner-background: #1e1e1e; -fx-text-fill: white;"/>
+                <Label text="The AI will analyze the JD to extract required skills, experience, and educational requirements." style="-fx-text-fill: #94A3B8; -fx-font-size: 11px; -fx-padding: -10 0 0 0;"/>
                 
                 <Button text="Analyze Job Description" onAction="#onAnalyzeJob" style="-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15 8 15; -fx-background-radius: 4;"/>
                 

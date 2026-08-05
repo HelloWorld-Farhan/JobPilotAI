@@ -22,16 +22,19 @@
             <VBox spacing="5">
                 <Label text="Job Title" style="-fx-text-fill: #b3b3b3;"/>
                 <TextField fx:id="tfJobTitle" promptText="e.g. Software Engineer" style="-fx-background-color: #333333; -fx-text-fill: white; -fx-padding: 8;"/>
+                <Label text="The role you are applying for." style="-fx-text-fill: #94A3B8; -fx-font-size: 11px;"/>
             </VBox>
             
             <VBox spacing="5">
                 <Label text="Company" style="-fx-text-fill: #b3b3b3;"/>
                 <TextField fx:id="tfCompany" promptText="e.g. Google" style="-fx-background-color: #333333; -fx-text-fill: white; -fx-padding: 8;"/>
+                <Label text="The company you are applying to." style="-fx-text-fill: #94A3B8; -fx-font-size: 11px;"/>
             </VBox>
             
             <VBox spacing="5" VBox.vgrow="ALWAYS">
                 <Label text="Job Description" style="-fx-text-fill: #b3b3b3;"/>
                 <TextArea fx:id="taJobDescription" promptText="Paste the full job description here..." wrapText="true" VBox.vgrow="ALWAYS" style="-fx-control-inner-background: #1e1e1e; -fx-text-fill: white;"/>
+                <Label text="The AI will compare this description against your parsed Resume to write a tailored cover letter." style="-fx-text-fill: #94A3B8; -fx-font-size: 11px;"/>
             </VBox>
             
             <Button text="Generate Cover Letter 🪄" onAction="#onGenerate" maxWidth="Infinity" style="-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10; -fx-background-radius: 4; -fx-font-size: 14px;"/>

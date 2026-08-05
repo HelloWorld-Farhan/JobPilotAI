@@ -9,10 +9,7 @@ import com.jobpilotai.resume.DocumentParser;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -22,6 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
+import java.util.prefs.Preferences;
 
 public class AiController implements Initializable {
 
@@ -37,10 +35,25 @@ public class AiController implements Initializable {
 
     private File currentResume;
     private final ObjectMapper mapper = new ObjectMapper();
+    private Preferences prefs;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         AppLogger.info("AI Analyzer view initialised.");
+        
+        prefs = Preferences.userNodeForPackage(AiController.class);
+        
+        // Load saved values
+        tfSelectedResume.setText(prefs.get("ai_resume_path", ""));
+        tfJobTitle.setText(prefs.get("ai_job_title", ""));
+        tfCompany.setText(prefs.get("ai_company", ""));
+        taJobInput.setText(prefs.get("ai_job_desc", ""));
+        
+        // Auto-save on change
+        tfSelectedResume.textProperty().addListener((obs, oldV, newV) -> prefs.put("ai_resume_path", newV));
+        tfJobTitle.textProperty().addListener((obs, oldV, newV) -> prefs.put("ai_job_title", newV));
+        tfCompany.textProperty().addListener((obs, oldV, newV) -> prefs.put("ai_company", newV));
+        taJobInput.textProperty().addListener((obs, oldV, newV) -> prefs.put("ai_job_desc", newV));
     }
 
     @FXML private void onBrowseResume() {
