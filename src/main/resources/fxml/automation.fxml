@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.jobpilotai.controller.AutomationController"
+      styleClass="page-root" spacing="0">
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-padding: 0 0 20 0;">
+        <VBox spacing="3">
+            <Label text="Automation Engine" styleClass="page-title"/>
+            <Label text="Manage background browser tasks and job queue"
+                   style="-fx-text-fill: #64748B; -fx-font-size: 12px;"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="statusLabel" text="Status: Idle" styleClass="count-badge" 
+               style="-fx-background-color: #1E293B; -fx-text-fill: #3B82F6; -fx-border-color: #3B82F6;"/>
+    </HBox>
+
+    <!-- Engine Control Cards -->
+    <HBox spacing="14" style="-fx-padding: 0 0 20 0;">
+        <VBox styleClass="info-card" HBox.hgrow="ALWAYS" spacing="12">
+            <Label text="Current Task" styleClass="card-title"/>
+            <Label fx:id="currentTaskLabel" text="None" styleClass="info-value" style="-fx-font-size: 14px;"/>
+            <Label fx:id="queueSizeLabel" text="Queue Size: 0" styleClass="info-key"/>
+        </VBox>
+
+        <VBox styleClass="info-card" HBox.hgrow="ALWAYS" spacing="12" minWidth="260">
+            <Label text="Controls" styleClass="card-title"/>
+            <HBox spacing="8">
+                <Button text="▶ Start" styleClass="btn-primary" onAction="#onStart"/>
+                <Button text="⏸ Pause" styleClass="btn-secondary" onAction="#onPause"/>
+                <Button text="⏹ Stop" styleClass="btn-danger" onAction="#onStop"/>
+            </HBox>
+            <HBox spacing="8">
+                <Button text="⏏ Resume" styleClass="btn-secondary" onAction="#onResume"/>
+                <Button text="✕ Clear Queue" styleClass="btn-secondary" onAction="#onClearQueue"/>
+            </HBox>
+        </VBox>
+    </HBox>
+
+    <!-- Queue Table -->
+    <HBox spacing="8" alignment="CENTER_LEFT" styleClass="toolbar"
+          style="-fx-padding: 10 14;">
+        <Label text="Job Queue" styleClass="card-title"/>
+    </HBox>
+    
+    <Region style="-fx-pref-height: 12; -fx-min-height: 12; -fx-max-height: 12;"/>
+
+    <TableView fx:id="queueTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="colCompany"  text="Company"  prefWidth="180" minWidth="120"/>
+            <TableColumn fx:id="colJobTitle" text="Job Title" prefWidth="240" minWidth="150"/>
+            <TableColumn fx:id="colStatus"   text="Status"   prefWidth="140" minWidth="100"/>
+            <TableColumn fx:id="colRetries"  text="Retries"  prefWidth="80"  minWidth="60"/>
+        </columns>
+        <placeholder>
+            <Label text="Queue is empty."
+                   style="-fx-text-fill: #475569; -fx-font-size: 14px;"/>
+        </placeholder>
+    </TableView>
+
+</VBox>

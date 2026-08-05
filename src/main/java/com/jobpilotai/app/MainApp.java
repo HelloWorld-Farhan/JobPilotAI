@@ -6,10 +6,17 @@ import com.jobpilotai.database.DatabaseManager;
 import com.jobpilotai.logs.AppLogger;
 import com.jobpilotai.service.SessionService;
 import com.jobpilotai.service.SettingsService;
+import com.jobpilotai.workspace.ProfileManager;
+import com.jobpilotai.plugins.PluginLoader;
+import com.jobpilotai.themes.ThemeEngine;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -56,10 +63,16 @@ public class MainApp extends Application {
         AppLogger.info("JobPilotAI " + AppConfig.APP_VERSION + " starting…");
 
         // Initialise SQLite database & run migrations
-        DatabaseManager.getInstance().initialize();
+        ProfileManager.getInstance().loadActiveProfile();
 
         // Load persisted settings
         SettingsService.getInstance().load();
+        
+        // Initialize Plugins
+        PluginLoader.initialize();
+
+        // Check for crashed sessions
+        com.jobpilotai.automation.sessionmanager.SessionRecovery.checkAndRecover();
 
         AppLogger.info("Initialisation complete.");
     }
@@ -69,6 +82,7 @@ public class MainApp extends Application {
         primaryStage = stage;
 
         // Configure stage before loading content
+        stage.initStyle(StageStyle.UNDECORATED);
         stage.setTitle(AppConfig.APP_NAME + " – " + AppConfig.APP_VERSION);
         stage.setMinWidth(AppConfig.MIN_WIDTH);
         stage.setMinHeight(AppConfig.MIN_HEIGHT);
@@ -90,22 +104,30 @@ public class MainApp extends Application {
                 Objects.requireNonNull(getClass().getResource("/fxml/main.fxml")));
         Parent root = loader.load();
 
-        // Apply the theme from saved settings
-        String theme = SettingsService.getInstance().getTheme();
-        String cssPath = "dark".equalsIgnoreCase(theme)
-                ? "/css/dark-theme.css"
-                : "/css/light-theme.css";
+        Scene scene = new Scene(root);
+        ThemeEngine.applyTheme(scene, SettingsService.getInstance().getTheme());
+        
+        // Global Keyboard Shortcuts
+        KeyCombination newAppShortcut = new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN);
+        KeyCombination searchShortcut = new KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN);
+        
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (newAppShortcut.match(event)) {
+                System.out.println("Global Shortcut: New Application triggered.");
+                event.consume();
+            } else if (searchShortcut.match(event)) {
+                System.out.println("Global Shortcut: Search triggered.");
+                event.consume();
+            }
+        });
 
-        Scene scene = new Scene(root, AppConfig.DEFAULT_WIDTH, AppConfig.DEFAULT_HEIGHT);
-        scene.getStylesheets().add(Objects.requireNonNull(
-                getClass().getResource("/css/base.css")).toExternalForm());
-        scene.getStylesheets().add(Objects.requireNonNull(
-                getClass().getResource(cssPath)).toExternalForm());
+        primaryStage.setScene(scene);
 
-        stage.setScene(scene);
-
-        // Restore window position/size if the user has saved it
+        // Restore window position/size if the user has saved it, else center it
         SettingsService.getInstance().restoreWindowState(stage);
+        if (!SettingsService.getInstance().isRememberWindowPosition()) {
+            stage.centerOnScreen();
+        }
 
         stage.show();
 
@@ -123,6 +145,9 @@ public class MainApp extends Application {
         if (primaryStage != null) {
             SettingsService.getInstance().saveWindowState(primaryStage);
         }
+
+        // Shutdown Plugins
+        PluginLoader.shutdown();
 
         // Close database connection
         DatabaseManager.getInstance().close();

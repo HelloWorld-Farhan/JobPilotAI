@@ -3,12 +3,6 @@ package com.jobpilotai.viewmodel;
 import com.jobpilotai.service.SettingsService;
 import javafx.beans.property.*;
 
-/**
- * ViewModel for the Settings view, exposing all configurable properties.
- *
- * @author JobPilotAI Team
- * @version 1.0.0
- */
 public class SettingsViewModel {
 
     private final SettingsService service = SettingsService.getInstance();
@@ -26,8 +20,15 @@ public class SettingsViewModel {
     private final BooleanProperty autoGenerateReports  = new SimpleBooleanProperty();
     private final BooleanProperty rememberWindowSize   = new SimpleBooleanProperty();
     private final BooleanProperty rememberWindowPosition = new SimpleBooleanProperty();
+    
+    private final BooleanProperty headlessMode         = new SimpleBooleanProperty();
+    private final BooleanProperty screenshotOnError    = new SimpleBooleanProperty();
+    private final StringProperty  timeoutMs            = new SimpleStringProperty();
+    private final StringProperty  maxRetries           = new SimpleStringProperty();
+    
+    private final StringProperty  geminiApiKey         = new SimpleStringProperty();
+    private final BooleanProperty aiEnabled            = new SimpleBooleanProperty();
 
-    /** Loads current settings from the service into properties. */
     public void load() {
         resumePath             .set(service.getResumePath());
         defaultEmail           .set(service.getDefaultEmail());
@@ -42,9 +43,16 @@ public class SettingsViewModel {
         autoGenerateReports    .set(service.isAutoGenerateReports());
         rememberWindowSize     .set(service.isRememberWindowSize());
         rememberWindowPosition .set(service.isRememberWindowPosition());
+        
+        headlessMode           .set(service.isHeadlessMode());
+        screenshotOnError      .set(service.isScreenshotOnError());
+        timeoutMs              .set(String.valueOf(service.getTimeoutMs()));
+        maxRetries             .set(String.valueOf(service.getMaxRetries()));
+        
+        geminiApiKey           .set(service.getGeminiApiKey());
+        aiEnabled              .set(service.isAiEnabled());
     }
 
-    /** Writes the current property values back to the service and persists them. */
     public void save() {
         service.setResumePath           (resumePath.get());
         service.setDefaultEmail         (defaultEmail.get());
@@ -59,10 +67,21 @@ public class SettingsViewModel {
         service.setAutoGenerateReports  (autoGenerateReports.get());
         service.setRememberWindowSize   (rememberWindowSize.get());
         service.setRememberWindowPosition(rememberWindowPosition.get());
+        
+        service.setHeadlessMode         (headlessMode.get());
+        service.setScreenshotOnError    (screenshotOnError.get());
+        try {
+            service.setTimeoutMs(Integer.parseInt(timeoutMs.get()));
+        } catch (NumberFormatException ignored) {}
+        try {
+            service.setMaxRetries(Integer.parseInt(maxRetries.get()));
+        } catch (NumberFormatException ignored) {}
+        
+        service.setGeminiApiKey         (geminiApiKey.get());
+        service.setAiEnabled            (aiEnabled.get());
+        
         service.save();
     }
-
-    // ── Property accessors ──────────────────────────────────────────────────
 
     public StringProperty  resumePathProperty()             { return resumePath; }
     public StringProperty  defaultEmailProperty()           { return defaultEmail; }
@@ -77,4 +96,12 @@ public class SettingsViewModel {
     public BooleanProperty autoGenerateReportsProperty()    { return autoGenerateReports; }
     public BooleanProperty rememberWindowSizeProperty()     { return rememberWindowSize; }
     public BooleanProperty rememberWindowPositionProperty() { return rememberWindowPosition; }
+    
+    public BooleanProperty headlessModeProperty()           { return headlessMode; }
+    public BooleanProperty screenshotOnErrorProperty()      { return screenshotOnError; }
+    public StringProperty  timeoutMsProperty()              { return timeoutMs; }
+    public StringProperty  maxRetriesProperty()             { return maxRetries; }
+    
+    public StringProperty  geminiApiKeyProperty()           { return geminiApiKey; }
+    public BooleanProperty aiEnabledProperty()              { return aiEnabled; }
 }

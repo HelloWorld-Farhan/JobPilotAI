@@ -1,6 +1,8 @@
 package com.jobpilotai.controller;
 
 import com.jobpilotai.logs.AppLogger;
+import com.jobpilotai.model.UserProfile;
+import com.jobpilotai.service.UserProfileService;
 import com.jobpilotai.viewmodel.SettingsViewModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,19 +14,24 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-/**
- * Controller for the Settings panel.
- *
- * @author JobPilotAI Team
- * @version 1.0.0
- */
 public class SettingsController implements Initializable {
 
+    // User Profile
+    @FXML private TextField tfFullName;
+    @FXML private TextField tfPhone;
+    @FXML private TextField tfCity;
+    @FXML private TextField tfCountry;
+    @FXML private TextField tfLinkedinUrl;
+    @FXML private TextField tfGithubUrl;
+    
+    // File Paths & Account
     @FXML private TextField    tfResumePath;
     @FXML private TextField    tfDefaultEmail;
     @FXML private TextField    tfGasUrl;
     @FXML private TextField    tfReportFolder;
     @FXML private TextField    tfLogFolder;
+    
+    // Appearance & Behaviour
     @FXML private ComboBox<String> cbTheme;
     @FXML private CheckBox     chkDarkMode;
     @FXML private CheckBox     chkNotifications;
@@ -33,14 +40,29 @@ public class SettingsController implements Initializable {
     @FXML private CheckBox     chkAutoReports;
     @FXML private CheckBox     chkRememberSize;
     @FXML private CheckBox     chkRememberPosition;
+    
+    // Automation
+    @FXML private CheckBox     chkHeadless;
+    @FXML private CheckBox     chkScreenshotError;
+    @FXML private TextField    tfTimeout;
+    @FXML private TextField    tfRetries;
+    
+    // AI
+    @FXML private CheckBox     chkAiEnabled;
+    @FXML private TextField    tfGeminiApiKey;
 
     private final SettingsViewModel viewModel = new SettingsViewModel();
+    private UserProfile currentProfile;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         cbTheme.getItems().addAll("dark", "light");
+        
         viewModel.load();
         bindControls();
+        
+        loadUserProfile();
+        
         AppLogger.info("Settings view initialised.");
     }
 
@@ -58,6 +80,36 @@ public class SettingsController implements Initializable {
         chkAutoReports     .selectedProperty().bindBidirectional(viewModel.autoGenerateReportsProperty());
         chkRememberSize    .selectedProperty().bindBidirectional(viewModel.rememberWindowSizeProperty());
         chkRememberPosition.selectedProperty().bindBidirectional(viewModel.rememberWindowPositionProperty());
+        
+        chkHeadless        .selectedProperty().bindBidirectional(viewModel.headlessModeProperty());
+        chkScreenshotError .selectedProperty().bindBidirectional(viewModel.screenshotOnErrorProperty());
+        tfTimeout          .textProperty().bindBidirectional(viewModel.timeoutMsProperty());
+        tfRetries          .textProperty().bindBidirectional(viewModel.maxRetriesProperty());
+        
+        chkAiEnabled       .selectedProperty().bindBidirectional(viewModel.aiEnabledProperty());
+        tfGeminiApiKey     .textProperty().bindBidirectional(viewModel.geminiApiKeyProperty());
+    }
+
+    private void loadUserProfile() {
+        currentProfile = UserProfileService.getInstance().loadProfile();
+        tfFullName.setText(currentProfile.getFullName());
+        tfPhone.setText(currentProfile.getPhone());
+        tfCity.setText(currentProfile.getCity());
+        tfCountry.setText(currentProfile.getCountry());
+        tfLinkedinUrl.setText(currentProfile.getLinkedinUrl());
+        tfGithubUrl.setText(currentProfile.getGithubUrl());
+    }
+    
+    private void saveUserProfile() {
+        if (currentProfile == null) currentProfile = new UserProfile();
+        currentProfile.setFullName(tfFullName.getText());
+        currentProfile.setPhone(tfPhone.getText());
+        currentProfile.setCity(tfCity.getText());
+        currentProfile.setCountry(tfCountry.getText());
+        currentProfile.setLinkedinUrl(tfLinkedinUrl.getText());
+        currentProfile.setGithubUrl(tfGithubUrl.getText());
+        
+        UserProfileService.getInstance().saveProfile(currentProfile);
     }
 
     @FXML private void onBrowseResume() {
@@ -84,15 +136,16 @@ public class SettingsController implements Initializable {
 
     @FXML private void onSave() {
         viewModel.save();
-        new Alert(Alert.AlertType.INFORMATION, "Settings saved successfully.", ButtonType.OK).showAndWait();
-        AppLogger.info("Settings saved by user.");
+        saveUserProfile();
+        new Alert(Alert.AlertType.INFORMATION, "Settings & Profile saved successfully.", ButtonType.OK).showAndWait();
+        AppLogger.info("Settings & Profile saved by user.");
     }
 
     @FXML private void onReset() {
         if (new Alert(Alert.AlertType.CONFIRMATION,
                 "Reset all settings to defaults?", ButtonType.YES, ButtonType.NO)
                 .showAndWait().filter(r -> r == ButtonType.YES).isPresent()) {
-            // Reload defaults from service defaults
+            
             viewModel.themeProperty()            .set("dark");
             viewModel.darkModeProperty()         .set(true);
             viewModel.enableNotificationsProperty().set(true);
@@ -101,6 +154,14 @@ public class SettingsController implements Initializable {
             viewModel.autoGenerateReportsProperty().set(false);
             viewModel.rememberWindowSizeProperty().set(true);
             viewModel.rememberWindowPositionProperty().set(true);
+            viewModel.headlessModeProperty()     .set(false);
+            viewModel.screenshotOnErrorProperty().set(true);
+            viewModel.timeoutMsProperty()        .set("30000");
+            viewModel.maxRetriesProperty()       .set("3");
+            
+            viewModel.aiEnabledProperty()        .set(false);
+            viewModel.geminiApiKeyProperty()     .set("");
+            
             viewModel.save();
         }
     }

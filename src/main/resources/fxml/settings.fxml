@@ -21,6 +21,42 @@
     <ScrollPane fitToWidth="true" styleClass="settings-scroll" VBox.vgrow="ALWAYS">
         <VBox spacing="16" style="-fx-padding: 0 4 0 0;">
 
+            <!-- ── User Profile ── -->
+            <VBox styleClass="settings-card" spacing="16">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="👤" style="-fx-font-size: 16px;"/>
+                    <Label text="User Profile" styleClass="settings-section-title"/>
+                </HBox>
+                <Separator style="-fx-opacity: 0.4;"/>
+
+                <GridPane hgap="20" vgap="12">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="100"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                        <ColumnConstraints minWidth="100"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                    </columnConstraints>
+                    
+                    <Label text="Full Name" styleClass="settings-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <TextField fx:id="tfFullName" promptText="Your full name" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    
+                    <Label text="Phone" styleClass="settings-label" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                    <TextField fx:id="tfPhone" promptText="Phone number" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+                    <Label text="City" styleClass="settings-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <TextField fx:id="tfCity" promptText="City" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    
+                    <Label text="Country" styleClass="settings-label" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                    <TextField fx:id="tfCountry" promptText="Country" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+                    <Label text="LinkedIn URL" styleClass="settings-label" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                    <TextField fx:id="tfLinkedinUrl" promptText="https://linkedin.com/in/..." GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2"/>
+                    
+                    <Label text="GitHub URL" styleClass="settings-label" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                    <TextField fx:id="tfGithubUrl" promptText="https://github.com/..." GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3"/>
+                </GridPane>
+            </VBox>
+
             <!-- ── File Paths ── -->
             <VBox styleClass="settings-card" spacing="16">
                 <HBox alignment="CENTER_LEFT" spacing="10">
@@ -64,6 +100,24 @@
                 </HBox>
             </VBox>
 
+            <!-- ── AI & Intelligence ── -->
+            <VBox styleClass="settings-card" spacing="16">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="🤖" style="-fx-font-size: 16px;"/>
+                    <Label text="AI Intelligence" styleClass="settings-section-title"/>
+                </HBox>
+                <Separator style="-fx-opacity: 0.4;"/>
+
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label text="Enable AI Features" styleClass="settings-label" minWidth="130"/>
+                    <CheckBox fx:id="chkAiEnabled"/>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label text="Gemini API Key" styleClass="settings-label" minWidth="130"/>
+                    <TextField fx:id="tfGeminiApiKey" promptText="AIzaSy…" HBox.hgrow="ALWAYS"/>
+                </HBox>
+            </VBox>
+
             <!-- ── Appearance ── -->
             <VBox styleClass="settings-card" spacing="16">
                 <HBox alignment="CENTER_LEFT" spacing="10">
@@ -103,6 +157,26 @@
                     <CheckBox fx:id="chkRememberPosition" text="Remember Window Position"
                               styleClass="settings-checkbox" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                 </GridPane>
+            </VBox>
+
+            <!-- ── Automation ── -->
+            <VBox styleClass="settings-card" spacing="16">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="🤖" style="-fx-font-size: 16px;"/>
+                    <Label text="Automation" styleClass="settings-section-title"/>
+                </HBox>
+                <Separator style="-fx-opacity: 0.4;"/>
+
+                <HBox alignment="CENTER_LEFT" spacing="24">
+                    <CheckBox fx:id="chkHeadless" text="Headless Mode (Background Browser)" styleClass="settings-checkbox"/>
+                    <CheckBox fx:id="chkScreenshotError" text="Take Screenshot on Error" styleClass="settings-checkbox"/>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label text="Timeout (ms)" styleClass="settings-label" minWidth="100"/>
+                    <TextField fx:id="tfTimeout" promptText="30000" prefWidth="100"/>
+                    <Label text="Max Retries" styleClass="settings-label" minWidth="100"/>
+                    <TextField fx:id="tfRetries" promptText="3" prefWidth="100"/>
+                </HBox>
             </VBox>
 
         </VBox>

@@ -1,0 +1,103 @@
+package com.jobpilotai.controller;
+
+import com.jobpilotai.coverletter.CoverLetterGenerator;
+import com.jobpilotai.database.DatabaseManager;
+import com.jobpilotai.logs.AppLogger;
+import com.jobpilotai.model.UserProfile;
+import com.jobpilotai.service.UserProfileService;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
+
+import java.io.File;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ResourceBundle;
+import java.util.concurrent.CompletableFuture;
+
+public class CoverLetterController implements Initializable {
+
+    @FXML private TextField tfJobTitle;
+    @FXML private TextField tfCompany;
+    @FXML private TextArea taJobDescription;
+    @FXML private TextArea taCoverLetter;
+    
+    private String latestResumeJson = "";
+    private UserProfile profile;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        profile = UserProfileService.getInstance().loadProfile();
+        loadLatestResumeData();
+    }
+
+    private void loadLatestResumeData() {
+        String sql = "SELECT raw_text, skills, experience FROM parsed_resumes ORDER BY parsed_at DESC LIMIT 1";
+        try (Connection conn = DatabaseManager.getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+             
+            if (rs.next()) {
+                latestResumeJson = "Skills: " + rs.getString("skills") + "\nExperience: " + rs.getString("experience");
+            }
+        } catch (SQLException e) {
+            AppLogger.error("Failed to load latest resume data", e);
+        }
+    }
+
+    @FXML private void onGenerate() {
+        if (taJobDescription.getText().trim().isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "Please enter a Job Description first.", ButtonType.OK).show();
+            return;
+        }
+
+        taCoverLetter.setText("AI is writing your cover letter... Please wait.");
+        
+        String profileData = "Name: " + profile.getFullName() + ", Email: " + profile.getEmail() + ", Phone: " + profile.getPhone();
+        String jobData = "Title: " + tfJobTitle.getText() + ", Company: " + tfCompany.getText() + "\nDesc: " + taJobDescription.getText();
+
+        CompletableFuture.runAsync(() -> {
+            String result = CoverLetterGenerator.generate(profileData, latestResumeJson, jobData);
+            
+            Platform.runLater(() -> {
+                taCoverLetter.setText(result);
+                AppLogger.info("Cover letter generated.");
+            });
+        });
+    }
+
+    @FXML private void onExportPdf() {
+        new Alert(Alert.AlertType.INFORMATION, "PDF Export is available via external virtual printers. DOCX export is supported natively.", ButtonType.OK).show();
+    }
+
+    @FXML private void onExportDocx() {
+        String text = taCoverLetter.getText();
+        if (text == null || text.trim().isEmpty() || text.startsWith("AI is writing")) {
+            new Alert(Alert.AlertType.WARNING, "No cover letter to export.", ButtonType.OK).show();
+            return;
+        }
+
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Save Cover Letter");
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Word Document", "*.docx"));
+        fc.setInitialFileName("CoverLetter_" + tfCompany.getText().replaceAll("\\s+", "") + ".docx");
+        
+        File file = fc.showSaveDialog(null);
+        if (file != null) {
+            boolean success = CoverLetterGenerator.exportToDocx(text, file);
+            if (success) {
+                new Alert(Alert.AlertType.INFORMATION, "Exported successfully!", ButtonType.OK).show();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Export failed. Check logs.", ButtonType.OK).show();
+            }
+        }
+    }
+}

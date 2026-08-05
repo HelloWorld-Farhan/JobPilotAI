@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<VBox spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jobpilotai.controller.PluginsController" style="-fx-background-color: #1a1a1a;">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+
+    <Text text="🧩 Plugin Manager" style="-fx-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+    
+    <Text text="Place your .jar plugins into the /plugins folder in your JobPilotAI directory." style="-fx-fill: #b3b3b3; -fx-font-size: 14px;"/>
+
+    <ListView fx:id="lvPlugins" VBox.vgrow="ALWAYS" style="-fx-background-color: #242424; -fx-control-inner-background: #242424;"/>
+
+</VBox>

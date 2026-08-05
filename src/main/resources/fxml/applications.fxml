@@ -41,15 +41,15 @@
     <!-- Table -->
     <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
         <columns>
-            <TableColumn fx:id="colId"       text="ID"       prefWidth="52"  minWidth="52"  maxWidth="70"/>
-            <TableColumn fx:id="colCompany"  text="Company"  prefWidth="185" minWidth="120"/>
-            <TableColumn fx:id="colJobTitle" text="Job Title" prefWidth="200" minWidth="130"/>
-            <TableColumn fx:id="colWebsite"  text="Website"  prefWidth="160" minWidth="100"/>
-            <TableColumn fx:id="colStatus"   text="Status"   prefWidth="148" minWidth="120"/>
-            <TableColumn fx:id="colDate"     text="Date"     prefWidth="100" minWidth="80"/>
-            <TableColumn fx:id="colTime"     text="Time"     prefWidth="80"  minWidth="60"/>
-            <TableColumn fx:id="colNotes"    text="Notes"    prefWidth="180" minWidth="100"/>
-            <TableColumn fx:id="colAttempts" text="Tries"    prefWidth="60"  minWidth="50"  maxWidth="80"/>
+            <TableColumn fx:id="colId"          text="ID"           prefWidth="50" />
+            <TableColumn fx:id="colCompany"     text="Company"      prefWidth="150" />
+            <TableColumn fx:id="colJobTitle"    text="Job Title"    prefWidth="200" />
+            <TableColumn fx:id="colStatus"      text="Status"       prefWidth="120" />
+            <TableColumn fx:id="colDate"        text="Date"         prefWidth="100" />
+            <TableColumn fx:id="colLocation"    text="Location"     prefWidth="120" />
+            <TableColumn fx:id="colSalary"      text="Salary"       prefWidth="100" />
+            <TableColumn fx:id="colRecruiter"   text="Recruiter"    prefWidth="120" />
+            <TableColumn fx:id="colResume"      text="Resume Used"  prefWidth="120" />
         </columns>
         <placeholder>
             <Label text="No applications yet. Click ＋ Add to get started."

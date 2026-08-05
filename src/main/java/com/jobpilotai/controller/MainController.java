@@ -1,15 +1,19 @@
 package com.jobpilotai.controller;
 
+import com.jobpilotai.app.MainApp;
 import com.jobpilotai.config.AppConfig;
 import com.jobpilotai.logs.AppLogger;
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -20,15 +24,16 @@ import java.util.ResourceBundle;
 
 /**
  * Root controller – manages the animated sidebar, fade page transitions,
- * live clock, and active-nav-button state.
+ * live clock, active-nav-button state, and custom window dragging.
  *
  * @author  JobPilotAI Team
- * @version 1.0.0
+ * @version 2.0.0
  */
 public class MainController implements Initializable {
 
     // ── FXML fields ──────────────────────────────────────────────────────────
     @FXML private BorderPane rootPane;
+    @FXML private HBox       titleBar;
     @FXML private VBox       sidebar;
     @FXML private StackPane  contentArea;
     @FXML private Label      clockLabel;
@@ -36,12 +41,19 @@ public class MainController implements Initializable {
     @FXML private Button     sidebarToggleBtn;
 
     @FXML private Button navDashboard;
+    @FXML private Button navAutomation;
     @FXML private Button navApplications;
     @FXML private Button navHistory;
     @FXML private Button navReports;
     @FXML private Button navSettings;
     @FXML private Button navLogs;
     @FXML private Button navAbout;
+    @FXML private Button navAi;
+    @FXML private Button navCoverLetter;
+    @FXML private Button navCompany;
+    @FXML private Button navAnalytics;
+    @FXML private Button navDiagnostics;
+    @FXML private Button navPlugins;
 
     // ── State ─────────────────────────────────────────────────────────────────
     private static final double SIDEBAR_EXPANDED  = 230;
@@ -50,14 +62,17 @@ public class MainController implements Initializable {
     private boolean  sidebarCollapsed = false;
     private Timeline clockTimeline;
 
+    private double xOffset = 0;
+    private double yOffset = 0;
+
     // Labels stored for collapse/expand toggle
     private static final String[] NAV_FULL_TEXT = {
-        "📊   Dashboard", "📋   Applications", "📁   History",
+        "📊   Dashboard", "🤖   Automation", "📋   Applications", "📁   History",
         "📈   Reports",   "⚙   Settings",     "📜   Logs",
         "ℹ   About"
     };
     private static final String[] NAV_ICON_TEXT = {
-        "📊", "📋", "📁", "📈", "⚙", "📜", "ℹ"
+        "📊", "🤖", "📋", "📁", "📈", "⚙", "📜", "ℹ"
     };
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
@@ -71,15 +86,54 @@ public class MainController implements Initializable {
         AppLogger.info("Main controller initialised.");
     }
 
+    // ── Window Controls ───────────────────────────────────────────────────────
+
+    @FXML private void onTitleBarPressed(MouseEvent event) {
+        xOffset = event.getSceneX();
+        yOffset = event.getSceneY();
+    }
+
+    @FXML private void onTitleBarDragged(MouseEvent event) {
+        Stage stage = MainApp.getPrimaryStage();
+        if (stage != null && !stage.isMaximized()) {
+            stage.setX(event.getScreenX() - xOffset);
+            stage.setY(event.getScreenY() - yOffset);
+        }
+    }
+
+    @FXML private void onMinimize() {
+        Stage stage = MainApp.getPrimaryStage();
+        if (stage != null) stage.setIconified(true);
+    }
+
+    @FXML private void onMaximize() {
+        Stage stage = MainApp.getPrimaryStage();
+        if (stage != null) {
+            stage.setMaximized(!stage.isMaximized());
+        }
+    }
+
+    @FXML private void onClose() {
+        AppLogger.info("Close button clicked.");
+        Platform.exit();
+    }
+
     // ── Navigation handlers ───────────────────────────────────────────────────
 
     @FXML private void onDashboard()    { navigateTo("dashboard");    setActiveButton(navDashboard); }
+    @FXML private void onAutomation()   { navigateTo("automation");   setActiveButton(navAutomation); }
     @FXML private void onApplications() { navigateTo("applications"); setActiveButton(navApplications); }
     @FXML private void onHistory()      { navigateTo("history");      setActiveButton(navHistory); }
     @FXML private void onReports()      { navigateTo("reports");      setActiveButton(navReports); }
     @FXML private void onSettings()     { navigateTo("settings");     setActiveButton(navSettings); }
     @FXML private void onLogs()         { navigateTo("logs");         setActiveButton(navLogs); }
     @FXML private void onAbout()        { navigateTo("about");        setActiveButton(navAbout); }
+    @FXML private void onAi()           { navigateTo("ai_analyzer");  setActiveButton(navAi); }
+    @FXML private void onCoverLetter()  { navigateTo("cover_letter"); setActiveButton(navCoverLetter); }
+    @FXML private void onCompany()      { navigateTo("company");      setActiveButton(navCompany); }
+    @FXML private void onAnalytics()    { navigateTo("analytics");    setActiveButton(navAnalytics); }
+    @FXML private void onDiagnostics()  { navigateTo("diagnostics");  setActiveButton(navDiagnostics); }
+    @FXML private void onPlugins()      { navigateTo("plugins");      setActiveButton(navPlugins); }
 
     @FXML private void onToggleSidebar() {
         sidebarCollapsed = !sidebarCollapsed;
@@ -91,7 +145,7 @@ public class MainController implements Initializable {
         new Timeline(new KeyFrame(Duration.millis(280), kv)).play();
 
         // Swap button text labels
-        Button[] navBtns = {navDashboard, navApplications, navHistory,
+        Button[] navBtns = {navDashboard, navAutomation, navApplications, navHistory,
                 navReports, navSettings, navLogs, navAbout};
         String[] texts = sidebarCollapsed ? NAV_ICON_TEXT : NAV_FULL_TEXT;
         for (int i = 0; i < navBtns.length; i++) {
@@ -144,7 +198,7 @@ public class MainController implements Initializable {
     // ── Active button ─────────────────────────────────────────────────────────
 
     private void setActiveButton(Button active) {
-        Button[] all = {navDashboard, navApplications, navHistory,
+        Button[] all = {navDashboard, navAutomation, navApplications, navHistory,
                 navReports, navSettings, navLogs, navAbout};
         for (Button btn : all) {
             btn.getStyleClass().removeAll("nav-btn-active");

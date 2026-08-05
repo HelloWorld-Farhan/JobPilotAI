@@ -11,6 +11,23 @@
             minWidth="1280" minHeight="720"
             prefWidth="1440" prefHeight="900">
 
+    <!-- ═══════════════════════════  TITLE BAR  ══════════════════════════════ -->
+    <top>
+        <HBox fx:id="titleBar" styleClass="title-bar" alignment="CENTER_RIGHT"
+              onMousePressed="#onTitleBarPressed" onMouseDragged="#onTitleBarDragged"
+              style="-fx-background-color: #0F172A; -fx-padding: 8 12; -fx-cursor: hand;">
+            <Region HBox.hgrow="ALWAYS"/>
+            <HBox spacing="8">
+                <Button text="—" styleClass="window-btn" onAction="#onMinimize"
+                        style="-fx-background-color: transparent; -fx-text-fill: #94A3B8; -fx-font-size: 14px; -fx-cursor: hand;"/>
+                <Button text="☐" styleClass="window-btn" onAction="#onMaximize"
+                        style="-fx-background-color: transparent; -fx-text-fill: #94A3B8; -fx-font-size: 14px; -fx-cursor: hand;"/>
+                <Button text="✕" styleClass="window-btn, window-btn-close" onAction="#onClose"
+                        style="-fx-background-color: transparent; -fx-text-fill: #94A3B8; -fx-font-size: 14px; -fx-cursor: hand;"/>
+            </HBox>
+        </HBox>
+    </top>
+
     <!-- ═══════════════════════════  SIDEBAR  ══════════════════════════════ -->
     <left>
         <VBox fx:id="sidebar" styleClass="sidebar" prefWidth="230" minWidth="230" spacing="0">
@@ -22,7 +39,7 @@
                     <image><Image url="@../images/icon.png"/></image>
                 </ImageView>
                 <Label text="JobPilotAI" styleClass="brand-name"/>
-                <Label fx:id="versionLabel" text="v1.0.0" styleClass="brand-version"/>
+                <Label fx:id="versionLabel" text="v2.0.0" styleClass="brand-version"/>
             </VBox>
 
             <!-- ── Divider ── -->
@@ -33,12 +50,31 @@
             <VBox spacing="3" VBox.vgrow="ALWAYS"
                   style="-fx-padding: 16 12 12 12;">
                 <Button fx:id="navDashboard"    text="📊   Dashboard"    styleClass="nav-btn,nav-btn-active" maxWidth="Infinity" onAction="#onDashboard"/>
+                <Button fx:id="navAutomation"   text="🤖   Automation"   styleClass="nav-btn" maxWidth="Infinity" onAction="#onAutomation"/>
                 <Button fx:id="navApplications" text="📋   Applications" styleClass="nav-btn" maxWidth="Infinity" onAction="#onApplications"/>
                 <Button fx:id="navHistory"      text="📁   History"      styleClass="nav-btn" maxWidth="Infinity" onAction="#onHistory"/>
                 <Button fx:id="navReports"      text="📈   Reports"      styleClass="nav-btn" maxWidth="Infinity" onAction="#onReports"/>
                 <Button fx:id="navSettings"     text="⚙   Settings"     styleClass="nav-btn" maxWidth="Infinity" onAction="#onSettings"/>
                 <Button fx:id="navLogs"         text="📜   Logs"         styleClass="nav-btn" maxWidth="Infinity" onAction="#onLogs"/>
                 <Button fx:id="navAbout"        text="ℹ   About"        styleClass="nav-btn" maxWidth="Infinity" onAction="#onAbout"/>
+
+                <!-- AI Analyzer Tab -->
+                <Button fx:id="navAi"           text="🧠   AI Assistant"   styleClass="nav-btn" maxWidth="Infinity" onAction="#onAi"/>
+                
+                <!-- Cover Letter Tab -->
+                <Button fx:id="navCoverLetter"  text="📝   Cover Letters"  styleClass="nav-btn" maxWidth="Infinity" onAction="#onCoverLetter"/>
+                
+                <!-- Company Insights Tab -->
+                <Button fx:id="navCompany"      text="🏢   Company Insights" styleClass="nav-btn" maxWidth="Infinity" onAction="#onCompany"/>
+                
+                <!-- Analytics Tab -->
+                <Button fx:id="navAnalytics"    text="📈   Analytics"      styleClass="nav-btn" maxWidth="Infinity" onAction="#onAnalytics"/>
+                
+                <!-- Diagnostics Tab -->
+                <Button fx:id="navDiagnostics"  text="🩺   Diagnostics"    styleClass="nav-btn" maxWidth="Infinity" onAction="#onDiagnostics"/>
+                
+                <!-- Plugins Tab -->
+                <Button fx:id="navPlugins"      text="🧩   Plugins"        styleClass="nav-btn" maxWidth="Infinity" onAction="#onPlugins"/>
             </VBox>
 
             <!-- ── Footer ── -->

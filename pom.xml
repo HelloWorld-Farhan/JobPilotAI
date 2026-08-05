@@ -74,6 +74,20 @@
             <version>2.0.13</version>
         </dependency>
 
+        <!-- Playwright – Browser Automation -->
+        <dependency>
+            <groupId>com.microsoft.playwright</groupId>
+            <artifactId>playwright</artifactId>
+            <version>1.41.0</version>
+        </dependency>
+
+        <!-- Apache PDFBox – PDF Parsing -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+
     </dependencies>
 
     <build>

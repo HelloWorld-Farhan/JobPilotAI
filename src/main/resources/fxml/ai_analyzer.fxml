@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jobpilotai.controller.AiController" style="-fx-background-color: #1a1a1a;">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+
+    <Text text="🧠 AI Intelligence" style="-fx-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS" style="-fx-background-color: #1a1a1a; -fx-text-base-color: white;">
+        
+        <!-- RESUME ANALYZER TAB -->
+        <Tab text="Resume Analyzer" style="-fx-background-color: #333333; -fx-text-fill: white;">
+            <VBox spacing="15.0" style="-fx-background-color: #242424; -fx-background-radius: 8;">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="15"/>
+                </padding>
+                
+                <Label text="Upload Resume for AI Parsing" style="-fx-text-fill: #b3b3b3; -fx-font-size: 14px;"/>
+                
+                <HBox spacing="10">
+                    <TextField fx:id="tfSelectedResume" editable="false" promptText="Select PDF, DOCX, TXT, or TEX..." HBox.hgrow="ALWAYS" style="-fx-background-color: #333333; -fx-text-fill: white; -fx-border-color: #444444; -fx-border-radius: 4; -fx-padding: 8;"/>
+                    <Button text="Browse" onAction="#onBrowseResume" style="-fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15 8 15; -fx-background-radius: 4;"/>
+                    <Button text="Analyze Resume" onAction="#onAnalyzeResume" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15 8 15; -fx-background-radius: 4;"/>
+                </HBox>
+                
+                <Label text="AI Extracted Data (JSON structure)" style="-fx-text-fill: #b3b3b3; -fx-font-size: 14px;"/>
+                <TextArea fx:id="taResumeOutput" editable="false" wrapText="true" VBox.vgrow="ALWAYS" style="-fx-control-inner-background: #1e1e1e; -fx-text-fill: #2ecc71; -fx-font-family: 'Consolas';"/>
+            </VBox>
+        </Tab>
+        
+        <!-- JOB ANALYZER TAB -->
+        <Tab text="Job Description Analyzer" style="-fx-background-color: #333333; -fx-text-fill: white;">
+            <VBox spacing="15.0" style="-fx-background-color: #242424; -fx-background-radius: 8;">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="15"/>
+                </padding>
+                
+                <HBox spacing="15">
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Label text="Job Title" style="-fx-text-fill: #b3b3b3;"/>
+                        <TextField fx:id="tfJobTitle" promptText="e.g. Senior Java Engineer" style="-fx-background-color: #333333; -fx-text-fill: white; -fx-padding: 8;"/>
+                    </VBox>
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Label text="Company" style="-fx-text-fill: #b3b3b3;"/>
+                        <TextField fx:id="tfCompany" promptText="e.g. Google" style="-fx-background-color: #333333; -fx-text-fill: white; -fx-padding: 8;"/>
+                    </VBox>
+                </HBox>
+                
+                <Label text="Paste Job Description" style="-fx-text-fill: #b3b3b3;"/>
+                <TextArea fx:id="taJobInput" promptText="Paste full JD here..." wrapText="true" prefHeight="150" style="-fx-control-inner-background: #1e1e1e; -fx-text-fill: white;"/>
+                
+                <Button text="Analyze Job Description" onAction="#onAnalyzeJob" style="-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15 8 15; -fx-background-radius: 4;"/>
+                
+                <Label text="AI Extracted Requirements" style="-fx-text-fill: #b3b3b3;"/>
+                <TextArea fx:id="taJobOutput" editable="false" wrapText="true" VBox.vgrow="ALWAYS" style="-fx-control-inner-background: #1e1e1e; -fx-text-fill: #9b59b6; -fx-font-family: 'Consolas';"/>
+            </VBox>
+        </Tab>
+        
+    </TabPane>
+</VBox>

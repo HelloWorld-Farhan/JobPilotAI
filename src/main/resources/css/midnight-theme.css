@@ -1,0 +1,11 @@
+/* JobPilotAI Midnight Theme */
+* {
+    -fx-base: #0f172a;
+    -fx-control-inner-background: #0f172a;
+    -fx-control-inner-background-alt: derive(-fx-control-inner-background, -5%);
+    -fx-color: #0b1121;
+    -fx-text-base-color: #f1f5f9;
+    -fx-text-fill: #f1f5f9;
+    -fx-text-inner-color: #f1f5f9;
+    -fx-accent: #38bdf8;
+}

@@ -20,14 +20,14 @@ public final class AppConfig {
     public static final String APP_AUTHOR  = "JobPilotAI Team";
 
     // ── Window Dimensions ───────────────────────────────────────────────────
-    public static final double MIN_WIDTH     = 1280;
-    public static final double MIN_HEIGHT    = 720;
-    public static final double DEFAULT_WIDTH = 1440;
-    public static final double DEFAULT_HEIGHT = 900;
+    public static final double MIN_WIDTH     = 1024;
+    public static final double MIN_HEIGHT    = 700;
+    public static final double DEFAULT_WIDTH = 1200;
+    public static final double DEFAULT_HEIGHT = 800;
 
     // ── Database ─────────────────────────────────────────────────────────────
     public static final String DB_FILE_NAME = "jobpilotai.db";
-    public static final int    DB_VERSION   = 1;
+    public static final int    DB_VERSION   = 4;
 
     // ── Settings keys ────────────────────────────────────────────────────────
     public static final String SETTING_THEME              = "theme";
@@ -40,13 +40,19 @@ public final class AppConfig {
     public static final String SETTING_ENABLE_NOTIF       = "enable_notifications";
     public static final String SETTING_ENABLE_EMAIL       = "enable_email";
     public static final String SETTING_AUTO_SAVE          = "auto_save";
-    public static final String SETTING_AUTO_REPORTS       = "auto_generate_reports";
+    public static final String SETTING_AUTO_REPORTS       = "auto_reports";
     public static final String SETTING_REMEMBER_SIZE      = "remember_window_size";
     public static final String SETTING_REMEMBER_POS       = "remember_window_position";
     public static final String SETTING_WINDOW_X           = "window_x";
     public static final String SETTING_WINDOW_Y           = "window_y";
     public static final String SETTING_WINDOW_W           = "window_width";
     public static final String SETTING_WINDOW_H           = "window_height";
+    public static final String SETTING_HEADLESS           = "headless_mode";
+    public static final String SETTING_SCREENSHOT_ERROR   = "screenshot_on_error";
+    public static final String SETTING_TIMEOUT            = "automation_timeout";
+    public static final String SETTING_MAX_RETRIES        = "max_retries";
+    public static final String SETTING_GEMINI_API_KEY     = "gemini_api_key";
+    public static final String SETTING_AI_ENABLED         = "ai_enabled";
 
     // ── Defaults ─────────────────────────────────────────────────────────────
     public static final String DEFAULT_THEME         = "dark";
@@ -55,6 +61,11 @@ public final class AppConfig {
     public static final boolean DEFAULT_EMAIL        = false;
     public static final boolean DEFAULT_AUTO_SAVE    = true;
     public static final boolean DEFAULT_AUTO_REPORTS = false;
+    public static final boolean DEFAULT_HEADLESS     = false;
+    public static final boolean DEFAULT_SCREENSHOT_ERROR = true;
+    public static final int     DEFAULT_TIMEOUT      = 30000;
+    public static final int     DEFAULT_MAX_RETRIES  = 3;
+    public static final boolean DEFAULT_AI_ENABLED   = false;
 
     // ── Report types ─────────────────────────────────────────────────────────
     public static final String REPORT_MANUAL  = "MANUAL";

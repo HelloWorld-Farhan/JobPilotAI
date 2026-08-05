@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jobpilotai.controller.CoverLetterController" style="-fx-background-color: #1a1a1a;">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+
+    <Text text="📝 Cover Letter Generator" style="-fx-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <HBox spacing="20.0" VBox.vgrow="ALWAYS">
+        
+        <!-- Input Form -->
+        <VBox spacing="15.0" prefWidth="350" style="-fx-background-color: #242424; -fx-background-radius: 8; -fx-padding: 15;">
+            <Label text="Job Details" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;"/>
+            
+            <VBox spacing="5">
+                <Label text="Job Title" style="-fx-text-fill: #b3b3b3;"/>
+                <TextField fx:id="tfJobTitle" promptText="e.g. Software Engineer" style="-fx-background-color: #333333; -fx-text-fill: white; -fx-padding: 8;"/>
+            </VBox>
+            
+            <VBox spacing="5">
+                <Label text="Company" style="-fx-text-fill: #b3b3b3;"/>
+                <TextField fx:id="tfCompany" promptText="e.g. Google" style="-fx-background-color: #333333; -fx-text-fill: white; -fx-padding: 8;"/>
+            </VBox>
+            
+            <VBox spacing="5" VBox.vgrow="ALWAYS">
+                <Label text="Job Description" style="-fx-text-fill: #b3b3b3;"/>
+                <TextArea fx:id="taJobDescription" promptText="Paste the full job description here..." wrapText="true" VBox.vgrow="ALWAYS" style="-fx-control-inner-background: #1e1e1e; -fx-text-fill: white;"/>
+            </VBox>
+            
+            <Button text="Generate Cover Letter 🪄" onAction="#onGenerate" maxWidth="Infinity" style="-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10; -fx-background-radius: 4; -fx-font-size: 14px;"/>
+        </VBox>
+        
+        <!-- Output Editor -->
+        <VBox spacing="15.0" HBox.hgrow="ALWAYS" style="-fx-background-color: #242424; -fx-background-radius: 8; -fx-padding: 15;">
+            <HBox alignment="CENTER_LEFT">
+                <Label text="Generated Cover Letter" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;"/>
+                <Region HBox.hgrow="ALWAYS" />
+                <HBox spacing="10">
+                    <Button text="Export DOCX" onAction="#onExportDocx" style="-fx-background-color: #2980b9; -fx-text-fill: white;"/>
+                    <Button text="Export PDF" onAction="#onExportPdf" style="-fx-background-color: #c0392b; -fx-text-fill: white;"/>
+                </HBox>
+            </HBox>
+            
+            <TextArea fx:id="taCoverLetter" wrapText="true" VBox.vgrow="ALWAYS" style="-fx-control-inner-background: #1e1e1e; -fx-text-fill: white; -fx-font-family: 'Consolas'; -fx-font-size: 14px;"/>
+        </VBox>
+        
+    </HBox>
+
+</VBox>

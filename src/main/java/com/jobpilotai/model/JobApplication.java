@@ -23,6 +23,11 @@ public class JobApplication {
     private String notes;
     private int attemptCount;
     private String createdAt;
+    
+    // V3 Fields
+    private String location;
+    private String salary;
+    private String recruiter;
 
     public JobApplication() {
         this.status       = "Pending";
@@ -84,6 +89,15 @@ public class JobApplication {
 
     public String getCreatedAt()          { return createdAt; }
     public void setCreatedAt(String v)    { this.createdAt = v; }
+
+    public String getLocation()           { return location; }
+    public void setLocation(String v)     { this.location = v; }
+
+    public String getSalary()             { return salary; }
+    public void setSalary(String v)       { this.salary = v; }
+
+    public String getRecruiter()          { return recruiter; }
+    public void setRecruiter(String v)    { this.recruiter = v; }
 
     @Override
     public String toString() {
