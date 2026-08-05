@@ -29,7 +29,10 @@ public class AboutController implements Initializable {
         authorLabel .setText("Built by " + AppConfig.APP_AUTHOR);
         githubLink  .setText("https://github.com/HelloWorld-Farhan/JobPilotAI");
         githubLink  .setOnAction(e -> {
-            try { Desktop.getDesktop().browse(new URI("https://github.com/HelloWorld-Farhan/JobPilotAI")); }
+            try { 
+                ((javafx.stage.Stage) githubLink.getScene().getWindow()).setIconified(true);
+                Desktop.getDesktop().browse(new URI("https://github.com/HelloWorld-Farhan/JobPilotAI")); 
+            }
             catch (Exception ex) { /* ignore */ }
         });
     }

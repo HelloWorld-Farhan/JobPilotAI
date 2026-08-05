@@ -10,7 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
-
+import java.awt.Desktop;
 import java.io.File;
 import java.net.URL;
 import java.sql.Connection;
@@ -107,7 +107,12 @@ public class CoverLetterController implements Initializable {
         if (file != null) {
             boolean success = CoverLetterGenerator.exportToDocx(text, file);
             if (success) {
-                com.jobpilotai.utils.DialogUtils.showAlert("Success", "Exported successfully!");
+                try {
+                    ((javafx.stage.Stage) taCoverLetter.getScene().getWindow()).setIconified(true);
+                    Desktop.getDesktop().open(file);
+                } catch (Exception e) {
+                    com.jobpilotai.utils.DialogUtils.showAlert("Success", "Exported successfully!");
+                }
             } else {
                 com.jobpilotai.utils.DialogUtils.showError("Export Failed", "Export failed. Check logs.");
             }

@@ -69,7 +69,10 @@ public class ReportsController implements Initializable {
         if (selected == null) { showInfo("Select a report to open."); return; }
         try {
             File f = new File(selected.getFilepath());
-            if (f.exists()) Desktop.getDesktop().open(f);
+            if (f.exists()) {
+                ((javafx.stage.Stage) table.getScene().getWindow()).setIconified(true);
+                Desktop.getDesktop().open(f);
+            }
             else showError("File not found: " + selected.getFilepath());
         } catch (Exception e) { showError("Cannot open file: " + e.getMessage()); }
     }
