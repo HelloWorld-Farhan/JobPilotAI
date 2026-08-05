@@ -15,8 +15,6 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
 
         try {
             // 1. Wait for and click the Easy Apply button
-            Locator easyApplyBtn = page.locator("button.jobs-apply-button").first();
-            
             String currentUrl = page.url().toLowerCase();
             if (currentUrl.contains("/login") || currentUrl.contains("/checkpoint") || currentUrl.contains("/auth/")) {
                 com.jobpilotai.service.NotificationService.getInstance().notify("JobPilotAI: Security Challenge", 
@@ -37,14 +35,34 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
             }
             
             AppLogger.info("Waiting for the Easy Apply button. You have 3 minutes.");
-            try {
-                easyApplyBtn.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE).setTimeout(180000));
-            } catch (Exception e) {
-                AppLogger.warn("Easy Apply button not found after 3 minutes. This might be an external application.");
+            boolean clicked = false;
+            long maxWait = System.currentTimeMillis() + 180000;
+            
+            while (System.currentTimeMillis() < maxWait) {
+                // Find any button with the class OR containing the text Easy Apply
+                Locator buttons = page.locator("button.jobs-apply-button, button:has-text('Easy Apply')");
+                int count = buttons.count();
+                
+                for (int i = 0; i < count; i++) {
+                    Locator btn = buttons.nth(i);
+                    if (btn.isVisible()) {
+                        btn.click();
+                        clicked = true;
+                        break;
+                    }
+                }
+                
+                if (clicked) {
+                    break;
+                }
+                Thread.sleep(1000);
+            }
+            
+            if (!clicked) {
+                AppLogger.warn("Easy Apply button not found or not visible after 3 minutes. This might be an external application.");
                 return false;
             }
             
-            easyApplyBtn.click();
             AppLogger.info("Clicked Easy Apply button.");
             
             // 2. Step through the modal
