@@ -18,15 +18,13 @@ public class LinkedInSearchStrategy implements JobApplyStrategy {
             // Give the search results time to load initially
             Thread.sleep(3000);
             
-            // Look for the main list container to scroll
-            Locator listContainer = page.locator(".jobs-search-results-list");
-            if (listContainer.count() == 0) {
-                AppLogger.warn("Could not find jobs-search-results-list. Searching for alternative layout...");
-                listContainer = page.locator(".scaffold-layout__list");
-            }
+            AppLogger.info("Waiting for the job list container. If you see a login or 2FA screen, please solve it now. You have 3 minutes.");
+            Locator listContainer = page.locator(".jobs-search-results-list, .scaffold-layout__list").first();
             
-            if (listContainer.count() == 0) {
-                AppLogger.error("Could not find the scrollable job list container.");
+            try {
+                listContainer.waitFor(new com.microsoft.playwright.Locator.WaitForOptions().setTimeout(180000));
+            } catch (Exception e) {
+                AppLogger.error("Could not find the scrollable job list container after 3 minutes. Task failed.");
                 return false;
             }
 

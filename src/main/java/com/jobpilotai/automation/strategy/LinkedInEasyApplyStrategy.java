@@ -16,10 +16,12 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
         try {
             // 1. Wait for and click the Easy Apply button
             Locator easyApplyBtn = page.locator("button.jobs-apply-button");
-            easyApplyBtn.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE).setTimeout(5000));
             
-            if (easyApplyBtn.count() == 0) {
-                AppLogger.warn("Easy Apply button not found. This might be an external application.");
+            AppLogger.info("Waiting for the Easy Apply button. If you are on a security challenge or 2FA, you have 3 minutes.");
+            try {
+                easyApplyBtn.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE).setTimeout(180000));
+            } catch (Exception e) {
+                AppLogger.warn("Easy Apply button not found after 3 minutes. This might be an external application.");
                 return false;
             }
             
