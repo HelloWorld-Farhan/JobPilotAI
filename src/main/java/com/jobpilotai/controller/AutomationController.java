@@ -86,6 +86,7 @@ public class AutomationController implements Initializable {
     }
     
     @FXML private void onClearQueue() {
+        WorkflowEngine.getInstance().stop(); // Stop any background tasks that might add to the queue
         QueueService.getInstance().clearQueue();
         refreshData();
     }
