@@ -14,7 +14,6 @@ import java.util.Optional;
 public class BrowserManager {
     private static BrowserManager instance;
     private Playwright playwright;
-    private Browser browser;
     private BrowserContext context;
     private Page page;
 
@@ -42,10 +41,17 @@ public class BrowserManager {
         if (playwright == null) {
             AppLogger.info("Starting Playwright (headless=" + headless + ")…");
             playwright = Playwright.create();
-            browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(headless));
-            context = browser.newContext();
+            Path userDataDir = Paths.get("browser_data");
+            
+            context = playwright.chromium().launchPersistentContext(userDataDir, 
+                new BrowserType.LaunchPersistentContextOptions().setHeadless(headless));
             context.setDefaultTimeout(timeoutMs);
-            page = context.newPage();
+            
+            if (context.pages().isEmpty()) {
+                page = context.newPage();
+            } else {
+                page = context.pages().get(0);
+            }
             AppLogger.info("Browser session started successfully.");
         }
     }
@@ -54,12 +60,10 @@ public class BrowserManager {
         if (playwright != null) {
             AppLogger.info("Stopping Browser session…");
             if (context != null) context.close();
-            if (browser != null) browser.close();
             playwright.close();
             
             page = null;
             context = null;
-            browser = null;
             playwright = null;
             AppLogger.info("Browser session stopped.");
         }

@@ -5,6 +5,8 @@ import com.jobpilotai.automation.queue.QueueService;
 import com.jobpilotai.database.DatabaseManager;
 import com.jobpilotai.logs.AppLogger;
 import com.jobpilotai.model.QueueItem;
+import com.jobpilotai.automation.strategy.JobApplyStrategy;
+import com.jobpilotai.automation.strategy.LinkedInEasyApplyStrategy;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -115,18 +117,30 @@ public class WorkflowEngine {
         updateStateInDb();
 
         try {
-            // Simple navigation as proof-of-concept for execution
-            boolean success = BrowserManager.getInstance().navigate(task.getJobUrl());
+            boolean navigated = BrowserManager.getInstance().navigate(task.getJobUrl());
+            if (!navigated) {
+                QueueService.getInstance().updateStatus(task.getId(), "Failed");
+                logHistory(task, "Failed", "Navigation failed");
+                return;
+            }
+
+            boolean success = false;
             
-            // Simulating work...
-            Thread.sleep(3000); 
+            if (task.getWebsite() != null && task.getWebsite().toLowerCase().contains("linkedin")) {
+                JobApplyStrategy strategy = new LinkedInEasyApplyStrategy();
+                success = strategy.apply(BrowserManager.getInstance().getPage(), task.getJobUrl());
+            } else {
+                AppLogger.warn("No automation strategy found for website: " + task.getWebsite());
+                // Fallback for unsupported sites (wait briefly, then fail)
+                Thread.sleep(3000);
+            }
 
             if (success) {
                 QueueService.getInstance().updateStatus(task.getId(), "Completed");
-                logHistory(task, "Completed", "Applied successfully");
+                logHistory(task, "Completed", "Applied successfully via AI Bot");
             } else {
                 QueueService.getInstance().updateStatus(task.getId(), "Failed");
-                logHistory(task, "Failed", "Navigation failed");
+                logHistory(task, "Failed", "Automation strategy returned false");
             }
         } catch (Exception e) {
             QueueService.getInstance().updateStatus(task.getId(), "Failed");
