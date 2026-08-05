@@ -55,7 +55,7 @@
                     <Button fx:id="navHistory"      text="📁   History"      styleClass="nav-btn" maxWidth="Infinity" onAction="#onHistory"/>
                     <Button fx:id="navReports"      text="📈   Reports"      styleClass="nav-btn" maxWidth="Infinity" onAction="#onReports"/>
                     <!-- AI Analyzer Tab -->
-                    <Button fx:id="navAi"           text="🧠   AI Assistant"   styleClass="nav-btn" maxWidth="Infinity" onAction="#onAi"/>
+                    <Button fx:id="navAi"           text="🧠   Parse Resume"   styleClass="nav-btn" maxWidth="Infinity" onAction="#onAi"/>
                     
                     <!-- Cover Letter Tab -->
                     <Button fx:id="navCoverLetter"  text="📝   Cover Letters"  styleClass="nav-btn" maxWidth="Infinity" onAction="#onCoverLetter"/>
@@ -65,18 +65,16 @@
                     
                     <!-- Analytics Tab -->
                     <Button fx:id="navAnalytics"    text="📈   Analytics"      styleClass="nav-btn" maxWidth="Infinity" onAction="#onAnalytics"/>
+                    
+                    <!-- ── System Navigation ── -->
+                    <Separator styleClass="sidebar-separator" style="-fx-opacity: 0.2; -fx-padding: 5 0 5 0;"/>
+                    <Button fx:id="navDiagnostics"  text="🩺   Diagnostics"    styleClass="nav-btn" maxWidth="Infinity" onAction="#onDiagnostics"/>
+                    <Button fx:id="navLogs"         text="📜   Logs"         styleClass="nav-btn" maxWidth="Infinity" onAction="#onLogs"/>
+                    <Button fx:id="navPlugins"      text="🧩   Plugins"        styleClass="nav-btn" maxWidth="Infinity" onAction="#onPlugins"/>
+                    <Button fx:id="navSettings"     text="⚙   Settings"     styleClass="nav-btn" maxWidth="Infinity" onAction="#onSettings"/>
+                    <Button fx:id="navAbout"        text="ℹ   About"        styleClass="nav-btn" maxWidth="Infinity" onAction="#onAbout"/>
                 </VBox>
             </ScrollPane>
-
-            <!-- ── System Navigation (Bottom Aligned) ── -->
-            <VBox spacing="3" style="-fx-padding: 0 12 12 12;">
-                <Separator styleClass="sidebar-separator" style="-fx-opacity: 0.2; -fx-padding: 0 0 10 0;"/>
-                <Button fx:id="navDiagnostics"  text="🩺   Diagnostics"    styleClass="nav-btn" maxWidth="Infinity" onAction="#onDiagnostics"/>
-                <Button fx:id="navLogs"         text="📜   Logs"         styleClass="nav-btn" maxWidth="Infinity" onAction="#onLogs"/>
-                <Button fx:id="navPlugins"      text="🧩   Plugins"        styleClass="nav-btn" maxWidth="Infinity" onAction="#onPlugins"/>
-                <Button fx:id="navSettings"     text="⚙   Settings"     styleClass="nav-btn" maxWidth="Infinity" onAction="#onSettings"/>
-                <Button fx:id="navAbout"        text="ℹ   About"        styleClass="nav-btn" maxWidth="Infinity" onAction="#onAbout"/>
-            </VBox>
 
             <!-- ── Footer ── -->
             <VBox alignment="CENTER" spacing="10" style="-fx-padding: 0 16 20 16;">

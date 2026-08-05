@@ -66,6 +66,11 @@ public class AiController implements Initializable {
         if (file != null) {
             currentResume = file;
             tfSelectedResume.setText(file.getAbsolutePath());
+            
+            // Save to global settings
+            com.jobpilotai.service.SettingsService settings = com.jobpilotai.service.SettingsService.getInstance();
+            settings.setResumePath(file.getAbsolutePath());
+            settings.save();
         }
     }
 
