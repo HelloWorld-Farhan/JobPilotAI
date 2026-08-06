@@ -43,95 +43,120 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
                 }
             }
             
-            // Wait for the page to fully load AND network to be idle
+            // Wait for page to fully load
             try { page.waitForLoadState(com.microsoft.playwright.options.LoadState.NETWORKIDLE,
-                    new Page.WaitForLoadStateOptions().setTimeout(15000)); } catch (Exception ignored) {}
-            Thread.sleep(1500); // Extra wait for LinkedIn's late-rendering JS
+                    new Page.WaitForLoadStateOptions().setTimeout(20000)); } catch (Exception ignored) {}
+            Thread.sleep(2000);
 
-            AppLogger.info("Page URL after load: " + page.url());
-            AppLogger.info("Page title: " + page.title());
+            AppLogger.info("Page URL: " + page.url() + " | Title: " + page.title());
+
+            // Wait for the job details content to appear in the DOM
+            AppLogger.info("Waiting for job content to render...");
+            try {
+                page.waitForSelector(
+                    "[data-job-id], .job-details-jobs-unified-top-card, .jobs-unified-top-card, .jobs-details, main",
+                    new Page.WaitForSelectorOptions().setTimeout(20000));
+                AppLogger.info("Job content container detected in DOM.");
+            } catch (Exception e) {
+                AppLogger.warn("Job content container not detected: " + e.getMessage());
+            }
+            Thread.sleep(1000);
 
             updateStatus("Looking for Easy Apply button...");
-            AppLogger.info("Searching for Easy Apply button...");
             boolean clicked = false;
-            long maxWait = System.currentTimeMillis() + 60000; // 60 second timeout
+            long maxWait = System.currentTimeMillis() + 60000;
 
             while (System.currentTimeMillis() < maxWait && !clicked) {
-                try { page.evaluate("window.scrollTo(0, 0)"); } catch (Exception ignored) {}
 
-                // Primary strategy: XPath that ONLY finds <button> elements containing "Easy Apply"
-                // Try each matching button until one opens the modal
+                // --- STRATEGY 1: JavaScript direct click (most robust - works on any element type) ---
                 try {
-                    // Precise XPath - only button tags with "Easy Apply" text (not sidebar cards)
-                    Locator buttons = page.locator(
-                        "//button[normalize-space(.)='Easy Apply' or normalize-space(.)='Easy Apply ']");
-                    int count = buttons.count();
-                    AppLogger.info("XPath exact button matches: " + count);
-
-                    for (int bi = 0; bi < count && !clicked; bi++) {
-                        try {
-                            Locator btn = buttons.nth(bi);
-                            if (!btn.isVisible()) continue;
-                            String cls = btn.getAttribute("class");
-                            AppLogger.info("Trying button " + bi + " class=" + cls);
-                            btn.scrollIntoViewIfNeeded();
-                            Thread.sleep(300);
-                            btn.click(new Locator.ClickOptions().setForce(true));
-                            // Wait up to 3s to see if the modal appeared
+                    Boolean jsClicked = (Boolean) page.evaluate(
+                        "() => {" +
+                        "  const all = [...document.querySelectorAll('button, [role=\"button\"], a')];" +
+                        "  const btn = all.find(e => {" +
+                        "    const txt = (e.innerText || e.textContent || '').trim();" +
+                        "    return txt === 'Easy Apply' || txt.startsWith('Easy Apply');" +
+                        "  });" +
+                        "  if (btn) { btn.click(); return true; }" +
+                        "  return false;" +
+                        "}");
+                    if (Boolean.TRUE.equals(jsClicked)) {
+                        AppLogger.info("Clicked Easy Apply via JavaScript!");
+                        Thread.sleep(2000);
+                        // Check if modal appeared
+                        Boolean modalVisible = (Boolean) page.evaluate(
+                            "() => { const m = document.querySelector('.artdeco-modal, .jobs-easy-apply-modal, [data-test-modal]'); return m != null && m.offsetParent != null; }");
+                        if (Boolean.TRUE.equals(modalVisible)) {
+                            AppLogger.info("Modal confirmed open via JS click.");
+                            clicked = true;
+                        } else {
+                            AppLogger.warn("JS click fired but modal not visible yet, waiting...");
                             Thread.sleep(1500);
-                            Locator modal = page.locator(".jobs-easy-apply-modal, [aria-label*='apply'], .artdeco-modal");
-                            if (modal.count() > 0) {
-                                AppLogger.info("Modal confirmed open after clicking button " + bi);
+                            // Check again
+                            modalVisible = (Boolean) page.evaluate(
+                                "() => { const m = document.querySelector('.artdeco-modal, .jobs-easy-apply-modal, [data-test-modal]'); return m != null; }");
+                            if (Boolean.TRUE.equals(modalVisible)) {
                                 clicked = true;
-                            } else {
-                                AppLogger.warn("Button " + bi + " clicked but modal not detected, trying next...");
+                                AppLogger.info("Modal appeared on second check.");
                             }
-                        } catch (Exception e) { /* try next button */ }
+                        }
                     }
                 } catch (Exception e) {
-                    AppLogger.warn("XPath button strategy failed: " + e.getMessage());
+                    AppLogger.warn("JS click strategy failed: " + e.getMessage());
                 }
 
                 if (clicked) break;
 
-                // Fallback: getByRole BUTTON with "Easy Apply" name
+                // --- STRATEGY 2: Playwright XPath on all elements ---
                 try {
-                    Locator btn = page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
-                            new Page.GetByRoleOptions().setName("Easy Apply").setExact(true));
-                    int count = btn.count();
-                    AppLogger.info("getByRole exact match count: " + count);
-                    for (int bi = 0; bi < count && !clicked; bi++) {
-                        try {
-                            Locator b = btn.nth(bi);
-                            if (!b.isVisible()) continue;
-                            b.scrollIntoViewIfNeeded();
-                            Thread.sleep(300);
-                            b.click(new Locator.ClickOptions().setForce(true));
-                            Thread.sleep(1500);
-                            Locator modal = page.locator(".jobs-easy-apply-modal, [aria-label*='apply'], .artdeco-modal");
-                            if (modal.count() > 0) {
-                                AppLogger.info("Modal confirmed via getByRole button " + bi);
-                                clicked = true;
-                            }
-                        } catch (Exception e) { /* try next */ }
+                    Locator buttons = page.locator("//*[self::button or @role='button'][normalize-space(.)='Easy Apply']");
+                    int count = buttons.count();
+                    if (count > 0) {
+                        AppLogger.info("XPath found " + count + " Easy Apply elements");
+                        for (int bi = 0; bi < count && !clicked; bi++) {
+                            try {
+                                Locator btn = buttons.nth(bi);
+                                if (!btn.isVisible()) continue;
+                                AppLogger.info("Clicking XPath element " + bi);
+                                btn.scrollIntoViewIfNeeded();
+                                Thread.sleep(200);
+                                btn.click(new Locator.ClickOptions().setForce(true));
+                                Thread.sleep(2000);
+                                Locator modal = page.locator(".artdeco-modal, .jobs-easy-apply-modal");
+                                if (modal.count() > 0) {
+                                    clicked = true;
+                                    AppLogger.info("Modal confirmed after XPath click.");
+                                }
+                            } catch (Exception ignored) {}
+                        }
                     }
-                } catch (Exception e) { /* try next */ }
+                } catch (Exception e) { /* ignore */ }
 
                 if (!clicked) {
-                    // Dump all buttons on page to diagnose
+                    // Log ALL clickable elements with "apply" to diagnose
                     try {
-                        String allButtons = (String) page.evaluate(
-                            "() => Array.from(document.querySelectorAll('button')).map(b => b.innerText.trim().replace(/\\n/g,' ') + ' | cls=' + b.className.substring(0,60)).filter(s=>s.length>5).join('\\n')");
-                        AppLogger.info("=== BUTTONS ON PAGE ===\n" + allButtons);
-                    } catch (Exception e) { /* ignore */ }
-                    Thread.sleep(1000);
+                        String applyInfo = (String) page.evaluate(
+                            "() => {" +
+                            "  const all = [...document.querySelectorAll('button, [role=\"button\"], a, span, div')];" +
+                            "  return all.filter(e => (e.innerText||'').toLowerCase().includes('apply'))" +
+                            "    .map(e => e.tagName+': '+e.innerText.trim().substring(0,80))" +
+                            "    .slice(0,20).join('\\n');" +
+                            "}");
+                        AppLogger.info("=== ALL 'APPLY' ELEMENTS ON PAGE ===\n" + applyInfo);
+                    } catch (Exception ignored) {}
+
+                    // Take screenshot to see what browser is actually showing
+                    com.jobpilotai.automation.browser.BrowserManager.getInstance().takeScreenshot("easy_apply_debug");
+                    Thread.sleep(2000);
                 }
             }
 
             if (!clicked) {
-                AppLogger.warn("Easy Apply button not found or modal did not open after 60s.");
+                AppLogger.warn("Easy Apply button not found after 60s. Check screenshot in screenshots/ folder.");
+                com.jobpilotai.automation.browser.BrowserManager.getInstance().takeScreenshot("easy_apply_failed");
                 return false;
             }
+
 
             updateStatus("Easy Apply Modal opened!");
             AppLogger.info("Easy Apply modal is open. Starting form navigation...");
