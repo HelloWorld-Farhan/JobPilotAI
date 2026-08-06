@@ -68,44 +68,52 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
 
             while (System.currentTimeMillis() < maxWait && !clicked) {
 
-                // --- STRATEGY 1: JavaScript direct click (most robust - works on any element type) ---
+                // --- STRATEGY 1: Get button coordinates via JS, click via Playwright mouse (works with React) ---
                 try {
-                    Boolean jsClicked = (Boolean) page.evaluate(
+                    // Find the Easy Apply button and return its screen coordinates
+                    @SuppressWarnings("unchecked")
+                    java.util.Map<String, Object> coords = (java.util.Map<String, Object>) page.evaluate(
                         "() => {" +
-                        "  const all = [...document.querySelectorAll('button, [role=\"button\"], a')];" +
+                        "  const all = [...document.querySelectorAll('button, [role=\"button\"]')];" +
                         "  const btn = all.find(e => {" +
                         "    const txt = (e.innerText || e.textContent || '').trim();" +
-                        "    return txt === 'Easy Apply' || txt.startsWith('Easy Apply');" +
+                        "    return txt === 'Easy Apply' || (txt.startsWith('Easy Apply') && txt.length < 25);" +
                         "  });" +
-                        "  if (btn) { btn.click(); return true; }" +
-                        "  return false;" +
+                        "  if (!btn) return null;" +
+                        "  btn.scrollIntoView({ block: 'center' });" +
+                        "  const rect = btn.getBoundingClientRect();" +
+                        "  return { x: rect.left + rect.width/2, y: rect.top + rect.height/2, text: btn.innerText.trim().substring(0,30) };" +
                         "}");
-                    if (Boolean.TRUE.equals(jsClicked)) {
-                        AppLogger.info("Clicked Easy Apply via JavaScript!");
-                        Thread.sleep(2000);
+
+                    if (coords != null) {
+                        double x = ((Number) coords.get("x")).doubleValue();
+                        double y = ((Number) coords.get("y")).doubleValue();
+                        String btnText = (String) coords.get("text");
+                        AppLogger.info("Easy Apply button found: '" + btnText + "' at (" + (int)x + ", " + (int)y + ")");
+                        Thread.sleep(300);
+                        // Use Playwright native mouse click - this fires real events React responds to
+                        page.mouse().click(x, y);
+                        AppLogger.info("Clicked via Playwright mouse at coordinates.");
+                        Thread.sleep(2500);
                         // Check if modal appeared
                         Boolean modalVisible = (Boolean) page.evaluate(
-                            "() => { const m = document.querySelector('.artdeco-modal, .jobs-easy-apply-modal, [data-test-modal]'); return m != null && m.offsetParent != null; }");
+                            "() => { const m = document.querySelector('.artdeco-modal, [data-test-modal], [role=\"dialog\"]'); return m != null && m.offsetParent != null; }");
                         if (Boolean.TRUE.equals(modalVisible)) {
-                            AppLogger.info("Modal confirmed open via JS click.");
+                            AppLogger.info("Modal confirmed open after mouse click!");
                             clicked = true;
                         } else {
-                            AppLogger.warn("JS click fired but modal not visible yet, waiting...");
-                            Thread.sleep(1500);
-                            // Check again
-                            modalVisible = (Boolean) page.evaluate(
-                                "() => { const m = document.querySelector('.artdeco-modal, .jobs-easy-apply-modal, [data-test-modal]'); return m != null; }");
-                            if (Boolean.TRUE.equals(modalVisible)) {
-                                clicked = true;
-                                AppLogger.info("Modal appeared on second check.");
-                            }
+                            AppLogger.warn("Mouse click fired but modal still not visible. Retrying...");
                         }
+                    } else {
+                        AppLogger.info("Easy Apply button not found in DOM yet, waiting...");
                     }
                 } catch (Exception e) {
-                    AppLogger.warn("JS click strategy failed: " + e.getMessage());
+                    AppLogger.warn("Mouse click strategy error: " + e.getMessage());
                 }
 
                 if (clicked) break;
+
+
 
                 // --- STRATEGY 2: Playwright XPath on all elements ---
                 try {
