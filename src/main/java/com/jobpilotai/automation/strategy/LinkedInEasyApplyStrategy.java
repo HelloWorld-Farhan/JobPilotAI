@@ -53,28 +53,65 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
             // Wait for the job details content to appear in the DOM
             AppLogger.info("Waiting for job content to render...");
             try {
-                page.waitForSelector(
-                    "[data-job-id], .job-details-jobs-unified-top-card, .jobs-unified-top-card, .jobs-details, main",
-                    new Page.WaitForSelectorOptions().setTimeout(20000));
+                page.waitForSelector("main, .jobs-details, .job-view-layout",
+                    new Page.WaitForSelectorOptions().setTimeout(15000));
                 AppLogger.info("Job content container detected in DOM.");
             } catch (Exception e) {
                 AppLogger.warn("Job content container not detected: " + e.getMessage());
             }
             Thread.sleep(1000);
 
+            // --- EARLY DETECTION: Check if this job can even be applied to ---
+            try {
+                String pageStatus = (String) page.evaluate(
+                    "() => {" +
+                    "  const body = document.body.innerText || '';" +
+                    "  if (body.includes('No longer accepting applications')) return 'CLOSED';" +
+                    "  if (body.includes('Applied') && document.querySelector('[aria-label=\"Applied\"]')) return 'ALREADY_APPLIED';" +
+                    "  // Check for Easy Apply button in the main job detail panel specifically" +
+                    "  const main = document.querySelector('main, .jobs-details, .job-view-layout, #main-content');" +
+                    "  if (main) {" +
+                    "    const btns = [...main.querySelectorAll('button, [role=\"button\"]')];" +
+                    "    const easyApplyBtn = btns.find(b => (b.innerText||'').trim() === 'Easy Apply');" +
+                    "    if (easyApplyBtn) return 'HAS_EASY_APPLY';" +
+                    "    const applyBtn = btns.find(b => (b.innerText||'').trim().includes('Apply'));" +
+                    "    if (applyBtn) return 'HAS_EXTERNAL_APPLY:' + (applyBtn.innerText||'').trim().substring(0,30);" +
+                    "  }" +
+                    "  return 'UNKNOWN';" +
+                    "}");
+                AppLogger.info("Job status check: " + pageStatus);
+                
+                if ("CLOSED".equals(pageStatus)) {
+                    AppLogger.warn("Job is CLOSED (No longer accepting applications). Skipping.");
+                    return false;
+                }
+                if ("ALREADY_APPLIED".equals(pageStatus)) {
+                    AppLogger.warn("Already applied to this job. Skipping.");
+                    return false;
+                }
+                if (pageStatus != null && pageStatus.startsWith("HAS_EXTERNAL_APPLY")) {
+                    AppLogger.warn("Job has external apply (not Easy Apply): " + pageStatus + ". Skipping.");
+                    return false;
+                }
+            } catch (Exception e) {
+                AppLogger.warn("Could not check job status: " + e.getMessage());
+            }
+
             updateStatus("Looking for Easy Apply button...");
             boolean clicked = false;
-            long maxWait = System.currentTimeMillis() + 60000;
+            long maxWait = System.currentTimeMillis() + 30000; // 30s is enough - job content is loaded
 
             while (System.currentTimeMillis() < maxWait && !clicked) {
 
-                // --- STRATEGY 1: Get button coordinates via JS, click via Playwright mouse (works with React) ---
+                // --- Find Easy Apply button ONLY inside the main job detail panel, not sidebar ---
                 try {
-                    // Find the Easy Apply button and return its screen coordinates
                     @SuppressWarnings("unchecked")
                     java.util.Map<String, Object> coords = (java.util.Map<String, Object>) page.evaluate(
                         "() => {" +
-                        "  const all = [...document.querySelectorAll('button, [role=\"button\"]')];" +
+                        "  // Scope to the main job detail area only, not the sidebar job list" +
+                        "  const panel = document.querySelector('main, .jobs-details, .job-view-layout, #main-content, .scaffold-layout__main');" +
+                        "  const scope = panel || document;" +
+                        "  const all = [...scope.querySelectorAll('button, [role=\"button\"]')];" +
                         "  const btn = all.find(e => {" +
                         "    const txt = (e.innerText || e.textContent || '').trim();" +
                         "    return txt === 'Easy Apply' || (txt.startsWith('Easy Apply') && txt.length < 25);" +
@@ -82,10 +119,14 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
                         "  if (!btn) return null;" +
                         "  btn.scrollIntoView({ block: 'center' });" +
                         "  const rect = btn.getBoundingClientRect();" +
+                        "  // Only return if button is actually visible on screen (y > 0)" +
+                        "  if (rect.top < 0 || rect.top > window.innerHeight) return null;" +
                         "  return { x: rect.left + rect.width/2, y: rect.top + rect.height/2, text: btn.innerText.trim().substring(0,30) };" +
                         "}");
 
+
                     if (coords != null) {
+
                         double x = ((Number) coords.get("x")).doubleValue();
                         double y = ((Number) coords.get("y")).doubleValue();
                         String btnText = (String) coords.get("text");
