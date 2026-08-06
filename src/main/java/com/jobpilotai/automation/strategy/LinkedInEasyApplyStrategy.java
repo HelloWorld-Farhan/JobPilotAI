@@ -43,29 +43,61 @@ public class LinkedInEasyApplyStrategy implements JobApplyStrategy {
                 }
             }
             
+            // Wait for the page to fully load before starting
+            try { page.waitForLoadState(com.microsoft.playwright.options.LoadState.DOMCONTENTLOADED); } catch (Exception ignored) {}
+            Thread.sleep(2000); // Give LinkedIn's JS a moment to render the job card
+
             updateStatus("Looking for Easy Apply button...");
-            AppLogger.info("Waiting for the Easy Apply button. You have 3 minutes.");
+            AppLogger.info("Searching for Easy Apply button with multiple strategies...");
             boolean clicked = false;
             long maxWait = System.currentTimeMillis() + 180000;
-            
+
+            // All known selectors for LinkedIn's Easy Apply button (LinkedIn changes these frequently)
+            String[] selectors = {
+                "button.jobs-apply-button:has-text('Easy Apply')",
+                ".jobs-apply-button:has-text('Easy Apply')",
+                "button:has-text('Easy Apply')",
+                "[data-control-name='jobdetails_topcard_inapply']",
+                ".jobs-unified-top-card__content--two-pane button:has-text('Easy Apply')",
+                ".job-details-jobs-unified-top-card__container--two-pane button:has-text('Easy Apply')",
+                ".jobs-s-apply button:has-text('Easy Apply')",
+                "button.artdeco-button:has-text('Easy Apply')"
+            };
+
             while (System.currentTimeMillis() < maxWait) {
-                try {
-                    Locator easyApplyBtn = page.locator(".jobs-apply-button:has-text('Easy Apply')");
-                    if (easyApplyBtn.count() > 0) {
-                        easyApplyBtn.first().click(new Locator.ClickOptions().setForce(true));
-                        clicked = true;
-                        break;
+                // Scroll to the top of the page to ensure the button is in view
+                try { page.evaluate("window.scrollTo(0, 0)"); } catch (Exception ignored) {}
+
+                for (String selector : selectors) {
+                    try {
+                        Locator btn = page.locator(selector);
+                        int count = btn.count();
+                        if (count > 0) {
+                            AppLogger.info("Found Easy Apply button using selector: " + selector + " (count=" + count + ")");
+                            // Scroll the element into view before clicking
+                            btn.first().scrollIntoViewIfNeeded();
+                            Thread.sleep(300);
+                            btn.first().click(new Locator.ClickOptions().setForce(true));
+                            clicked = true;
+                            break;
+                        }
+                    } catch (Exception e) {
+                        // Selector didn't work, try next one
                     }
-                } catch (Exception e) {
-                    AppLogger.warn("Error finding/clicking Easy Apply button: " + e.getMessage());
                 }
-                Thread.sleep(500); // Poll very fast
+
+                if (clicked) break;
+
+                // Retry all selectors again
+                AppLogger.info("Easy Apply button not found yet, retrying all selectors...");
+                Thread.sleep(300);
             }
-            
+
             if (!clicked) {
-                AppLogger.warn("Easy Apply button not found or not visible after 3 minutes. This might be an external application.");
+                AppLogger.warn("Easy Apply button not found after 3 minutes. This may be an external application or the job requires a direct apply.");
                 return false;
             }
+
             
             updateStatus("Navigating Easy Apply Modal...");
             AppLogger.info("Clicked Easy Apply button.");
